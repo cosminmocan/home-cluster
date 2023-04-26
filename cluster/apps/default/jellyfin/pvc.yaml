@@ -10,4 +10,4 @@ spec:
   resources:
     requests:
       storage: 4Gi
-  storageClassName: nfs-client
+  storageClassName: longhorn

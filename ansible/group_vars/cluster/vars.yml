@@ -1,6 +1,9 @@
 ---
+# (string) The ARP address kube-vip broadcasts
+# Used to load balance control plane nodes
+kubevip_address: "192.168.100.9"
 # CIDR used for calico installation of where to look for nodes
-calico_cidr: "192.168.1.0/24"
+calico_cidr: "192.168.100.0/24"
 
 # (string) Timezone for the servers
 timezone: "Europe/Bucharest"
@@ -29,11 +32,14 @@ k3s_debug: false
 # (bool) Enable etcd embedded datastore
 k3s_etcd_datastore: true
 # (bool) Allow the use of unsupported configurations in k3s
-k3s_use_unsupported_config: true
+k3s_use_unsupported_config: false
 # (string) Control Plane registration address
-k3s_registration_address: "192.168.1.10"
+k3s_registration_address: "{{ kubevip_address }}"
 # (list) A list of URLs to deploy on the primary control plane. Read notes below.
 k3s_server_manifests_urls:
+  # Kube-vip
+  - url: https://kube-vip.io/manifests/rbac.yaml
+    filename: kube-vip-rbac.yaml
   # Tigera Operator
   - url: https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/tigera-operator.yaml
     filename: calico-tigera-operator.yaml
@@ -42,3 +48,4 @@ k3s_server_manifests_urls:
 # /var/lib/rancher/k3s/server/manifests
 k3s_server_manifests_templates:
   - calico-installation.yaml.j2
+  - kube-vip-daemonset.yaml.j2

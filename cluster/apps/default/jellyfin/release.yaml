@@ -67,7 +67,7 @@ spec:
       nfs-media:
         enabled: true
         mountPath: /media
-        path: /mnt/data_hdd
+        path: /volume1/kubeNFS/torrents
         server: "${STORAGE_NAS_IP}"
         type: nfs
         readOnly: true

@@ -1,0 +1,11 @@
+---
+apiVersion: notification.toolkit.fluxcd.io/v1beta2
+kind: Provider
+metadata:
+  name: github-provider
+  namespace: flux-system
+spec:
+  type: github
+  address: https://github.com/cosminmocan/home-cluster
+  secretRef:
+    name: github-token

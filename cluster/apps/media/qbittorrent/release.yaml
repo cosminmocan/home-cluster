@@ -74,6 +74,6 @@ spec:
       downloads:
         enabled: true
         mountPath: /downloads
-        path: /mnt/data_hdd
+        path: /volume1/kubeNFS/torrents
         server: "${STORAGE_NAS_IP}"
         type: nfs
