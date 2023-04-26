@@ -1,0 +1,67 @@
+---
+- hosts: cluster
+  become: true
+  gather_facts: true
+  any_errors_fatal: true
+  tasks:
+    - name: Set same timezone on all nodes
+      community.general.timezone:
+        name: "{{ timezone | default('Etc/UTC') }}"
+
+    - name: Enable fstrim
+      ansible.builtin.systemd:
+        service: fstrim.timer
+        enabled: true
+
+    - name: Set hostname to inventory hostname
+      ansible.builtin.hostname:
+        name: "{{ inventory_hostname }}"
+
+    - name: Update /etc/hosts to include inventory hostname
+      ansible.builtin.blockinfile:
+        path: /etc/hosts
+        block: |
+          127.0.1.1   {{ inventory_hostname }}
+
+    - name: Install packages
+      block:
+        - name: Install required packages
+          ansible.builtin.apt:
+            name: "{{ apt_packages | default([]) }}"
+            state: present
+            update_cache: true
+
+        - name: Remove leaf packages
+          ansible.builtin.apt:
+            autoremove: true
+      tags:
+        - packages
+
+    - name: Enable required kernel modules
+      ansible.builtin.copy:
+        mode: 0644
+        content: "{{ item }}"
+        dest: "/etc/modules-load.d/{{ item }}.conf"
+      loop: [br_netfilter, ip_vs, ip_vs_rr, overlay, rbd]
+
+    - name: Configure sysctl parameters
+      ansible.posix.sysctl:
+        name: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: present
+        reload: true
+        sysctl_file: /etc/sysctl.d/99-kubernetes.conf
+      loop: "{{ sysctl_params | dict2items }}"
+      vars:
+        sysctl_params:
+          net.ipv4.ip_forward: 1
+          net.ipv4.conf.all.forwarding: 1
+          net.ipv4.conf.all.rp_filter: 0
+          net.ipv4.conf.default.rp_filter: 0
+          net.ipv6.conf.all.forwarding: 1
+          fs.inotify.max_user_watches: 524288
+          fs.inotify.max_user_instances: 512
+
+    - name: Reboot
+      ansible.builtin.reboot:
+        msg: Rebooting nodes

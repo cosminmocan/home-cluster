@@ -1,0 +1,12 @@
+# .ansible-lint
+offline: true
+exclude_paths:
+  - ../ansible/.ansible/
+  - ../ansible/**/*.sops.yml
+  - ../.taskfiles/
+  - ../cluster/
+warn_list:
+  - unnamed-task
+skip_list:
+  - name[play]
+  - key-order[task]
