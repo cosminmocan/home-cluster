@@ -25,6 +25,9 @@ spec:
       retries: 3
   uninstall:
     keepHistory: false
+  dependsOn:
+    - name: reflector
+      namespace: kube-system
   values:
     installCRDs: true
     webhook:
