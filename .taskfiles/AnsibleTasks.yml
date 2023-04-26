@@ -1,0 +1,72 @@
+---
+version: "3"
+
+env:
+  ANSIBLE_CONFIG: "{{.PROJECT_DIR}}/ansible.cfg"
+
+vars:
+  ANSIBLE_PLAYBOOK_DIR: "{{.ANSIBLE_DIR}}"
+  ANSIBLE_INVENTORY_DIR: "{{.ANSIBLE_DIR}}/inventory"
+
+tasks:
+  init:
+    desc: Install / Upgrade Ansible galaxy deps
+    dir: ansible
+    cmds:
+      - ansible-galaxy install -r requirements.yml --force
+
+  list:
+    desc: List all the hosts
+    dir: ansible
+    cmds:
+      - ansible all -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yml --list-hosts
+
+  lint:
+    desc: Run ansible lint
+    dir: ansible
+    cmds:
+      - ansible-lint --config-file {{.PROJECT_DIR}}/.linters/.ansible-lint
+
+  prepare:
+    desc: Prepare all the k8s nodes for running k3s
+    dir: ansible
+    cmds:
+      - ansible-playbook -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yml {{.ANSIBLE_PLAYBOOK_DIR}}/cluster-prepare.yml {{.CLI_ARGS}}
+
+  install:
+    desc: Install Kubernetes on the nodes
+    dir: ansible
+    cmds:
+      - ansible-playbook -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yml {{.ANSIBLE_PLAYBOOK_DIR}}/cluster-installation.yml
+
+  nuke:
+    desc: Uninstall Kubernetes on the nodes
+    dir: ansible
+    interactive: true
+    cmds:
+      - ansible-playbook -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yml {{.ANSIBLE_PLAYBOOK_DIR}}/cluster-nuke.yml
+      - task: reboot
+
+  ping:
+    desc: Ping all the hosts
+    dir: ansible
+    cmds:
+      - ansible all -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yml --one-line -m 'ping'
+
+  uptime:
+    desc: Uptime of all the hosts
+    dir: ansible
+    cmds:
+      - ansible all -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yml --one-line -a 'uptime'
+
+  reboot:
+    desc: Reboot all the k8s nodes
+    dir: ansible
+    cmds:
+      - ansible-playbook -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yml {{.ANSIBLE_PLAYBOOK_DIR}}/cluster-reboot.yml
+
+  poweroff:
+    desc: Shutdown all the k8s nodes
+    dir: ansible
+    cmds:
+      - ansible cluster -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yml -a '/usr/bin/systemctl poweroff' --become

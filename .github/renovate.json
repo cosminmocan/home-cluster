@@ -1,0 +1,43 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:base",
+    ":disableRateLimiting",
+    "github>cosminmocan/home-cluster//.github/renovate/autoMerge.json",
+    "github>cosminmocan/home-cluster//.github/renovate/labels.json"
+  ],
+  "schedule": [
+    "every weekend"
+  ],
+  "dependencyDashboard": true,
+  "dependencyDashboardTitle": "[Renovate 🤖] Dependency Dashboard",
+  "python": {
+    "enabled": false
+  },
+  "ansible-galaxy": {
+    "enabled": false
+  },
+  "flux": {
+    "fileMatch": ["cluster/.+\\.ya?ml$"]
+  },
+  "helm-values": {
+    "fileMatch": ["cluster/.+\\.ya?ml$"]
+  },
+  "kubernetes": {
+    "fileMatch": ["cluster/.+\\.ya?ml$"]
+  },
+  "regexManagers": [
+    {
+      "description": "Dependencies from comments",
+      "fileMatch": [
+        "ansible/.+\\.ya?ml$",
+        "cluster/.+\\.ya?ml$"
+      ],
+      "matchStrings": [
+        "datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)( versioning=(?<versioning>\\S+))?\n.*?\"(?<currentValue>.*)\"\n"
+      ],
+      "datasourceTemplate": "{{#if datasource}}{{{datasource}}}{{else}}github-releases{{/if}}",
+      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
+    }
+  ]
+}

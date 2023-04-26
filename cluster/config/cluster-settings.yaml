@@ -1,0 +1,12 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cluster-settings
+  namespace: flux-system
+data:
+  TIMEZONE: Europe/Bucharest
+  METALLB_LB_RANGE: "192.168.1.200-192.168.1.250"
+  NIGNX_INGRESS_IP: "192.168.1.211"
+  K8S_GATEWAY_IP: "192.168.1.200"
+  STORAGE_NAS_IP: "192.168.1.6"

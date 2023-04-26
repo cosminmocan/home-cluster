@@ -1,0 +1,5 @@
+ansible==6.6.0
+ansible-lint
+pre-commit
+yamllint
+netaddr

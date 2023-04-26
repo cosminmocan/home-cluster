@@ -1,0 +1,21 @@
+---
+version: "3"
+
+tasks:
+  deps:
+    desc: Install pip dependencies
+    cmds:
+      - "{{._PYTHON | shellQuote}} -m pip install pip-tools"
+      - "{{._PYTHON | shellQuote}} -m piptools compile --resolver=backtracking requirements.in"
+      - "{{._PYTHON | shellQuote}} -m piptools sync"
+
+  create:
+    desc: Create a virtual environment for python
+    cmds:
+      - "{{.PYTHON | shellQuote}} -m venv {{.VENV_PATH}}"
+
+  init:
+    desc: Setup a python virtual environment and install dependencies
+    cmds:
+      - task: create
+      - task: deps

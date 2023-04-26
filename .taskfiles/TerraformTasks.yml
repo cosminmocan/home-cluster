@@ -1,0 +1,39 @@
+---
+version: "3"
+
+tasks:
+
+  init:
+    desc: Initialize terraform dependencies
+    cmds:
+      - cd terraform/vms && terraform init {{.CLI_ARGS}}
+
+  cloudflare:plan:
+    desc: TF Cloudflare - Show the changes terraform will make
+    dir: terraform/cloudflare
+    cmds:
+      - terraform plan {{.CLI_ARGS}}
+
+  cloudflare:apply:
+    desc: Apply the changes to Cloudflare
+    dir: terraform/cloudflare
+    cmds:
+      - terraform apply {{.CLI_ARGS}}
+
+  vms:plan:
+    desc: TF VMs - Show the changes terraform will make
+    dir: terraform/vms
+    cmds:
+      - terraform plan {{.CLI_ARGS}}
+
+  vms:apply:
+    desc: Apply the changes to Proxmox
+    dir: terraform/vms
+    cmds:
+      - terraform apply {{.CLI_ARGS}}
+
+  vms:destroy:
+    desc: Destroy all vms
+    dir: terraform/vms
+    cmds:
+      - terraform destroy {{.CLI_ARGS}}

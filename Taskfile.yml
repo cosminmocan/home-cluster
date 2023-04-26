@@ -1,0 +1,51 @@
+---
+version: "3"
+
+vars:
+  PROJECT_DIR:
+    sh: "git rev-parse --show-toplevel"
+  CLUSTER_DIR: "{{.PROJECT_DIR}}/cluster"
+  ANSIBLE_DIR: "{{.PROJECT_DIR}}/ansible"
+  TERRAFORM_DIR: "{{.PROJECT_DIR}}/terraform"
+  PYTHON: python3
+  VENV_PATH: "{{.TASKFILE_DIR}}/.venv"
+  _PYTHON: "{{.VENV_PATH}}/bin/python"
+
+env:
+  KUBECONFIG: "{{.PROJECT_DIR}}/kubeconfig"
+
+includes:
+  ansible: .taskfiles/AnsibleTasks.yml
+  cluster: .taskfiles/ClusterTasks.yml
+  precommit: .taskfiles/PrecommitTasks.yml
+  terraform: .taskfiles/TerraformTasks.yml
+  sops: .taskfiles/SopsTasks.yml
+  venv: .taskfiles/VenvTasks.yml
+
+tasks:
+  init:
+    desc: Initialize workstation dependencies with Brew
+    cmds:
+      - task: venv:init
+      - task: precommit:init
+      - brew install {{.DEPS}} {{.CLI_ARGS}}
+    preconditions:
+      - sh: command -v brew
+        msg: |
+          Homebrew is not installed. Using MacOS, Linux or WSL?
+          Head over to https://brew.sh to get up and running.
+    vars:
+      DEPS: >-
+        age
+        direnv
+        fluxcd/tap/flux
+        helm
+        ipcalc
+        jq
+        kubectl
+        kustomize
+        sops
+        hashicorp/tap/terraform
+        tflint
+        yq
+        cmctl

@@ -1,0 +1,16 @@
+{
+    "files.associations": {
+        "*.json5": "jsonc",
+        "**/ansible/**/*.yml": "ansible",
+        "**/ansible/**/*.sops.yml": "yaml",
+        "**/ansible/**/inventory/**/*.yml": "yaml",
+        "**/terraform/**/*.tf": "terraform"
+    },
+    "ansible.validation.lint.arguments": "-c .linters/.ansible-lint",
+    "ansible.python.activationScript": ".venv/bin/activate",
+    "python.defaultInterpreterPath": ".venv/bin/python",
+    "python.terminal.activateEnvInCurrentTerminal": true,
+    "editor.bracketPairColorization.enabled": true,
+    "editor.guides.bracketPairs": "active",
+    "editor.hover.delay": 1000
+}
