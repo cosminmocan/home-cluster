@@ -22,4 +22,4 @@ spec:
     args:
     nfs:
       server: "${STORAGE_NAS_IP}"
-      path: /mnt/data_hdd/nfs/kubedata
+      path: /volume1/kubeNFS
