@@ -9,7 +9,7 @@ locals {
   vm_def_master = [
     {
       ip        = "192.168.100.10"
-      cores     = 2
+      cores     = 4
       memory    = 4096
       disk_size = "40G"
     }
@@ -18,13 +18,13 @@ locals {
   vm_def_worker = [
     {
       ip        = "192.168.100.20"
-      cores     = 2
+      cores     = 4
       memory    = 4096
       disk_size = "40G"
     },
     {
       ip        = "192.168.100.21"
-      cores     = 2
+      cores     = 4
       memory    = 4096
       disk_size = "40G"
     }
