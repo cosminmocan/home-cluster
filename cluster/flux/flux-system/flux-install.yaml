@@ -8,7 +8,7 @@ spec:
   interval: 30m
   url: https://github.com/fluxcd/flux2
   ref:
-    tag: v0.41.1
+    tag: v0.41.2
   ignore: |
     /*
     !/manifests
