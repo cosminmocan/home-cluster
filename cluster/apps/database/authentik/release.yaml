@@ -37,7 +37,7 @@ spec:
         user: "postgres"
         password: "${SECRET_POSTGRES_ADMIN_PASS}"
       redis:
-        host: "redis.database.svc.cluster.local"
+        host: "redis-master.database.svc.cluster.local"
         password: ""
     ingress:
       enabled: true
