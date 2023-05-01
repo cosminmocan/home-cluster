@@ -39,9 +39,3 @@ spec:
       persistence:
         enabled: true
         existingClaim: postgresql-data
-    metrics:
-      enabled: true
-      serviceMonitor:
-        enabled: true
-      prometheusRule:
-        enabled: true

@@ -37,7 +37,3 @@ spec:
         enabled: false
     sentinel:
       enabled: false
-    metrics:
-      enabled: true
-      serviceMonitor:
-        enabled: true
