@@ -8,7 +8,7 @@ metadata:
 spec:
   interval: 2m30s
   ref:
-    branch: tiny
+    branch: main
   url: http://github.com/cosminmocan/home-cluster
   ignore: |
     /*
