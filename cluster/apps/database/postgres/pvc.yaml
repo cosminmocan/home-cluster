@@ -1,13 +1,12 @@
----
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: jellyfin-config
-  namespace: default
+  name: postgresql-data
+  namespace: database
 spec:
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 15Gi
+      storage: 2Gi
   storageClassName: longhorn
