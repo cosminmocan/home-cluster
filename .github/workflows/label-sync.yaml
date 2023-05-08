@@ -4,7 +4,7 @@ name: "[META] Sync labels"
 on:
   workflow_dispatch:
   push:
-    branches: ["tiny"]
+    branches: ["main"]
     paths: [".github/labels.yaml"]
 
 jobs:
