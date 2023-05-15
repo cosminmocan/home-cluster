@@ -32,3 +32,4 @@ spec:
       restoreVolumeRecurringJobs: true
       concurrentAutomaticEngineUpgradePerNodeLimit: 1
       defaultDataPath: /mnt/longhorn/
+      backupTarget: "nfs://${STORAGE_NAS_IP}:/volume1/kubeNFS/cluster-backups"
