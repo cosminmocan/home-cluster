@@ -40,13 +40,17 @@ spec:
             port: *port
       bittorrent:
         enabled: true
-        type: ClusterIP
+        type: LoadBalancer
+        annotations:
+          metallb.universe.tf/loadBalancerIPs: "${QBITTORRENT_IP}"
+        externalIPs: ["${QBITTORRENT_IP}"]
         ports:
           bittorrent:
             enabled: true
             port: *port-bt
             protocol: TCP
             targetPort: *port-bt
+        externalTrafficPolicy: Local
     ingress:
       main:
         enabled: true
