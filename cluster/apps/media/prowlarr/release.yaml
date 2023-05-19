@@ -23,7 +23,7 @@ spec:
       TZ: ${TIMEZONE}
       PROWLARR__LOG_LEVEL: info
       PROWLARR__BRANCH: nightly
-      PROWLARR__APPLICATION_URL: "https://{{ .Release.Name }}.${SECRET_DOMAIN}"
+      PROWLARR__APPLICATION_URL: "https://prowlarr.${SECRET_DOMAIN}"
       PROWLARR__POSTGRES_HOST: "${POSTGRES_HOST_ADDRESS}"
       PROWLARR__POSTGRES_MAIN_DB: prowlarr-main
       PROWLARR__POSTGRES_LOG_DB: prowlarr-log
