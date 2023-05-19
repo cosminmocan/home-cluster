@@ -61,8 +61,8 @@ spec:
 
       media:
         enabled: true
-        mountPath: /media
-        path: /volume1/kubeNFS/torrents/Movies
+        mountPath: /downloads
+        path: /volume1/kubeNFS/torrents
         server: "${STORAGE_NAS_IP}"
         type: nfs
 
