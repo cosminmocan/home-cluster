@@ -34,7 +34,7 @@ spec:
           hajimari.io/appName: Jellyseerr
           hajimari.io/icon: mdi:jellyfish-outline
         hosts:
-          - host: &host "jelyseerr.${SECRET_DOMAIN}"
+          - host: &host "jellyseerr.${SECRET_DOMAIN}"
             paths:
               - path: /
                 pathType: Prefix
