@@ -48,7 +48,7 @@ spec:
               - path: /
                 pathType: Prefix
         tls:
-            hosts:
+          - hosts:
               - *host
     podSecurityContext:
       runAsUser: 1000
