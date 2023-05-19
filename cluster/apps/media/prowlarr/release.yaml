@@ -35,9 +35,6 @@ spec:
         ports:
           http:
             port: *port
-      prowlarr:
-        enabled: true
-        type: ClusterIP
     ingress:
       main:
         enabled: true
@@ -46,7 +43,7 @@ spec:
           hajimari.io/appName: Prowlarr
           hajimari.io/icon: material-symbols:cat
         hosts:
-          - host: &host prowlarr.${SECRET_DOMAIN}
+          - host: &host "prowlarr.${SECRET_DOMAIN}"
             paths:
               - path: /
                 pathType: Prefix
