@@ -32,6 +32,7 @@ spec:
       PROWLARR__PORT: &port 9696
     service:
       main:
+        type: ClusterIP
         ports:
           http:
             port: *port
