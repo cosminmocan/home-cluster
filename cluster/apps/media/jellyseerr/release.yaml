@@ -2,7 +2,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: prowlarr
+  name: jellyseerr
   namespace: media
 spec:
   interval: 15m
@@ -16,34 +16,25 @@ spec:
         namespace: flux-system
   values:
     image:
-      repository: ghcr.io/onedr0p/prowlarr-nightly
-      tag: 1.5.0.3364
-    hostname: prowlarr
+      repository: docker.io/fallenbagel/jellyseerr
+      tag: 1.4.1
     env:
       TZ: ${TIMEZONE}
-      PROWLARR__LOG_LEVEL: info
-      PROWLARR__BRANCH: nightly
-      PROWLARR__APPLICATION_URL: "https://prowlarr.${SECRET_DOMAIN}"
-      PROWLARR__POSTGRES_HOST: "${POSTGRES_HOST_ADDRESS}"
-      PROWLARR__POSTGRES_MAIN_DB: prowlarr-main
-      PROWLARR__POSTGRES_LOG_DB: prowlarr-log
-      PROWLARR__POSTGRES_USER: "postgres"
-      PROWLARR__POSTGRES_PASSWORD: "${SECRET_POSTGRES_ADMIN_PASS}"
-      PROWLARR__PORT: &port 9696
+      LOG_LEVEL: "info"
     service:
       main:
         ports:
           http:
-            port: *port
+            port: 5055
     ingress:
       main:
         enabled: true
         ingressClassName: nginx
         annotations:
-          hajimari.io/appName: Prowlarr
-          hajimari.io/icon: mdi:cat
+          hajimari.io/appName: Jellyseerr
+          hajimari.io/icon: mdi:jellyfish-outline
         hosts:
-          - host: &host "prowlarr.${SECRET_DOMAIN}"
+          - host: &host "jelyseerr.${SECRET_DOMAIN}"
             paths:
               - path: /
                 pathType: Prefix
@@ -58,11 +49,12 @@ spec:
     persistence:
       config:
         enabled: true
-        existingClaim: prowlarr-config-v2
+        existingClaim: jellyseerr-config
+        mountPath: /app/config
     resources:
       requests:
-        memory: 100Mi
         cpu: 10m
+        memory: 50Mi
       limits:
         memory: 300Mi
         cpu: 200m
