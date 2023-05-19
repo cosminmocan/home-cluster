@@ -57,7 +57,7 @@ spec:
       config:
         enabled: true
         existingClaim: radarr-config
-        mountPath: /app/config
+        mountPath: /config
 
       media:
         enabled: true
