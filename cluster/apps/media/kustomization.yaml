@@ -6,3 +6,4 @@ resources:
   - qbittorrent
   - prowlarr
   - jellyseerr
+  - radarr
