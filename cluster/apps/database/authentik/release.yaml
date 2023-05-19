@@ -32,7 +32,7 @@ spec:
       log_level: info
       secret_key: "${SECRET_AUTHENTIK_SECRET_KEY}"
       postgresql:
-        host: "postgresql.database.svc.cluster.local"
+        host: "${POSTGRES_HOST_ADDRESS}"
         name: "authentik"
         user: "postgres"
         password: "${SECRET_POSTGRES_ADMIN_PASS}"
