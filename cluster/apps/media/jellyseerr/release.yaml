@@ -1,0 +1,60 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: jellyseerr
+  namespace: media
+spec:
+  interval: 15m
+  chart:
+    spec:
+      chart: app-template
+      version: 1.5.0
+      sourceRef:
+        kind: HelmRepository
+        name: chart-bjw
+        namespace: flux-system
+  values:
+    image:
+      repository: docker.io/fallenbagel/jellyseerr
+      tag: 1.4.1
+    env:
+      TZ: ${TIMEZONE}
+      LOG_LEVEL: "info"
+    service:
+      main:
+        ports:
+          http:
+            port: 5055
+    ingress:
+      main:
+        enabled: true
+        ingressClassName: nginx
+        annotations:
+          hajimari.io/appName: Jellyseerr
+          hajimari.io/icon: mdi:jellyfish-outline
+        hosts:
+          - host: &host "jelyseerr.${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                pathType: Prefix
+        tls:
+          - hosts:
+              - *host
+    podSecurityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+      fsGroup: 1000
+      fsGroupChangePolicy: "OnRootMismatch"
+    persistence:
+      config:
+        enabled: true
+        existingClaim: jellyseerr-config
+        mountPath: /app/config
+    resources:
+      requests:
+        cpu: 10m
+        memory: 50Mi
+      limits:
+        memory: 300Mi
+        cpu: 200m

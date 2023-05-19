@@ -41,7 +41,7 @@ spec:
         ingressClassName: nginx
         annotations:
           hajimari.io/appName: Prowlarr
-          hajimari.io/icon: material-symbols:cat
+          hajimari.io/icon: mdi:cat
         hosts:
           - host: &host "prowlarr.${SECRET_DOMAIN}"
             paths:
@@ -64,5 +64,5 @@ spec:
         memory: 100Mi
         cpu: 10m
       limits:
-        memory: 200Mi
-        cpu: 150m
+        memory: 300Mi
+        cpu: 200m
