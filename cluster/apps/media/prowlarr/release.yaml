@@ -30,6 +30,7 @@ spec:
       PROWLARR__POSTGRES_USER: "postgres"
       PROWLARR__POSTGRES_PASSWORD: "${SECRET_POSTGRES_ADMIN_PASS}"
       PROWLARR__PORT: &port 9696
+      PROWLARR__API_KEY: "${PROWLARR_SECRET_KEY}"
     service:
       main:
         ports:

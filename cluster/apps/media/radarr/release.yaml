@@ -28,6 +28,7 @@ spec:
       RADARR__POSTGRES_PASSWORD: "${SECRET_POSTGRES_ADMIN_PASS}"
       RADARR__POSTGRES_MAIN_DB: radarr-main
       RADARR__POSTGRES_LOG_DB: radarr-log
+      RADARR__API_KEY: "${RADARR_SECRET_KEY}"
     service:
       main:
         ports:
