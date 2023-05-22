@@ -16,12 +16,12 @@ spec:
         namespace: flux-system
   values:
     image:
-      repository: ghcr.io/onedr0p/radarr-nightly
-      tag: 4.5.2.7337@sha256:5f28f1933e68507a69abd37047664581b55e9b5c3372c540254cf76b6ce083c6
+      repository: ghcr.io/onedr0p/radarr
+      tag: 4.4.4.7068
     env:
-      TZ: "America/New_York"
+      TZ: ${TIMEZONE}
       RADARR__LOG_LEVEL: info
-      RADARR__BRANCH: nightly
+      RADARR__BRANCH: master
       RADARR__APPLICATION_URL: "https://radarr.${SECRET_DOMAIN}"
       RADARR__POSTGRES_HOST: "${POSTGRES_HOST_ADDRESS}"
       RADARR__POSTGRES_USER: "postgres"
