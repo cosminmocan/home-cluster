@@ -3,10 +3,15 @@ version: "3"
 
 tasks:
 
-  init:
+  vms:init:
     desc: Initialize terraform dependencies
     cmds:
       - cd terraform/vms && terraform init {{.CLI_ARGS}}
+
+  cloudflare:init:
+    desc: Initialize terraform dependencies
+    cmds:
+      - cd terraform/cloudflare && terraform init {{.CLI_ARGS}}
 
   cloudflare:plan:
     desc: TF Cloudflare - Show the changes terraform will make
