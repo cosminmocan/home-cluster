@@ -12,5 +12,6 @@
     "python.terminal.activateEnvInCurrentTerminal": true,
     "editor.bracketPairColorization.enabled": true,
     "editor.guides.bracketPairs": "active",
-    "editor.hover.delay": 1000
+    "editor.hover.delay": 1000,
+    "ansible.python.interpreterPath": ".venv/bin/python"
 }
