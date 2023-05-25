@@ -6,6 +6,9 @@ metadata:
   namespace: media
 spec:
   interval: 15m
+  dependsOn:
+    - name: qbittorrent
+      namespace: media
   chart:
     spec:
       chart: app-template
