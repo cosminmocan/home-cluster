@@ -1,0 +1,20 @@
+---
+apiVersion: notification.toolkit.fluxcd.io/v1beta2
+kind: Alert
+metadata:
+  name: flux-discord-alerts
+  namespace: flux-system
+spec:
+  providerRef:
+    name: discord-provider
+  eventSeverity: info
+  eventSources:
+    - kind: GitRepository
+      name: '*'
+    - kind: HelmRelease
+      name: '*'
+    - kind: Kustomization
+      name: '*'
+  exclusionList:
+    - "^Dependencies.*"
+  suspend: false # Disable alerting
