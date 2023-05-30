@@ -57,6 +57,7 @@ spec:
         enabled: false
       server:
         root_url: "https://grafana.${SECRET_DOMAIN}"
+        serve_from_sub_path: true
       paths:
         data: /var/lib/grafana/data
         logs: /var/log/grafana
