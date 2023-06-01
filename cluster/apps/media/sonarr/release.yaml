@@ -1,0 +1,76 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: sonarr
+  namespace: media
+spec:
+  interval: 15m
+  chart:
+    spec:
+      chart: app-template
+      version: 1.5.0
+      sourceRef:
+        kind: HelmRepository
+        name: chart-bjw
+        namespace: flux-system
+  values:
+    image:
+      repository: ghcr.io/onedr0p/sonarr
+      tag: 3.0.10.1567
+    env:
+      TZ: ${TIMEZONE}
+      SONARR__LOG_LEVEL: info
+      SONARR__BRANCH: master
+      SONARR__APPLICATION_URL: "https://sonarr.${SECRET_DOMAIN}"
+      SONARR__POSTGRES_HOST: "${POSTGRES_HOST_ADDRESS}"
+      SONARR__POSTGRES_USER: "postgres"
+      SONARR__POSTGRES_PASSWORD: "${SECRET_POSTGRES_ADMIN_PASS}"
+      SONARR__POSTGRES_MAIN_DB: sonarr-main
+      SONARR__POSTGRES_LOG_DB: sonarr-log
+      SONARR__API_KEY: "${RADARR_SECRET_KEY}"
+    service:
+      main:
+        ports:
+          http:
+            port: 8989
+    ingress:
+      main:
+        enabled: true
+        ingressClassName: nginx
+        annotations:
+          hajimari.io/appName: sonarr
+          hajimari.io/icon: mdi:television-classic
+        hosts:
+          - host: &host "sonarr.${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                pathType: Prefix
+        tls:
+          - hosts:
+              - *host
+    podSecurityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+      fsGroup: 1000
+      fsGroupChangePolicy: "OnRootMismatch"
+    persistence:
+      config:
+        enabled: true
+        existingClaim: sonarr-config
+        mountPath: /config
+
+      media:
+        enabled: true
+        mountPath: /downloads
+        path: /volume1/kubeNFS/torrents
+        server: "${STORAGE_NAS_IP}"
+        type: nfs
+
+    resources:
+      requests:
+        cpu: 15m
+        memory: 380M
+      limits:
+        cpu: 100m
+        memory: 670M
