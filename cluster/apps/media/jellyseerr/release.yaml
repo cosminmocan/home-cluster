@@ -33,6 +33,8 @@ spec:
         annotations:
           hajimari.io/appName: Jellyseerr
           hajimari.io/icon: mdi:jellyfish-outline
+          external-dns.alpha.kubernetes.io/target: "${CLOUDFLARE_DDNS_RECORD}"
+
         hosts:
           - host: &host "jellyseerr.${SECRET_DOMAIN}"
             paths:
