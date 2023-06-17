@@ -34,7 +34,7 @@ spec:
     restartPolicy: OnFailure
     image:
       repository: ghcr.io/onedr0p/alpine
-      tag: 3.18.0
+      tag: 3.18.2
     command: ["/bin/bash", "/app/cloudflare-ddns.sh"]
     env:
       - name: CLOUDFLARE_EMAIL
