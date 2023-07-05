@@ -6,7 +6,8 @@
       "automerge": true,
       "ignoreTests": true,
       "matchCurrentVersion": "!/^0/",
-      "matchUpdateTypes": ["patch"]
+      "matchUpdateTypes": ["patch"],
+      "minimumReleaseAge": "7 days"
     }
   ]
 }
