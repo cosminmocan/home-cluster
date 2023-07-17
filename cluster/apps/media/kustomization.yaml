@@ -10,3 +10,4 @@ resources:
   - sonarr
   - jellyfin
   - flaresolverr
+  - nextcloud
