@@ -9,7 +9,7 @@ Inspired by an earlier revision of this amazing template [onedr0p/flux-cluster-t
 
 ###   🏁 Installation
 
-At the base, my cluster is composed of a Lenovo P330 tiny and a Synology DS423+, I use [Proxmox](https://www.proxmox.com/en/) as a hypervisor, [Debian](https://www.debian.org/) as the VM OS of choice and some LXC containers.
+At the base, my cluster is composed of a Lenovo P330 tiny and a Synology DS923+, I use [Proxmox](https://www.proxmox.com/en/) as a hypervisor, [Debian](https://www.debian.org/) as the VM OS of choice and some LXC containers.
 
 Running on the hypervisor are 3 VMs(kube nodes) which compose my home kubernetes cluster.
 The VMs are created using Terraform and a custom [cloud-init](https://cloudinit.readthedocs.io/en/latest/) ready template, after the deployment, the entire cluster is deployed using [Ansible Playbooks](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_intro.html), and the kubernetes part is deployed using the [k3s](https://k3s.io/)  galaxy role [ansible-role-k3s](https://github.com/PyratLabs/ansible-role-k3s).
