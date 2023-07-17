@@ -1,0 +1,62 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: firefly-iii
+  namespace: database
+spec:
+  interval: 15m
+  chart:
+    spec:
+      chart: app-template
+      version: 1.5.1
+      sourceRef:
+        kind: HelmRepository
+        name: chart-bjw
+        namespace: flux-system
+  values:
+    image:
+      repository: fireflyiii/core
+      tag: version-6.0
+    env:
+      DB_CONNECTION: pgsql
+      TRUSTED_PROXIES: "**"
+      APP_URL: "money.${SECRET_DOMAIN}"
+      DB_HOST: "${POSTGRES_HOST_ADDRESS}"
+      DB_PORT: 5432
+      DB_DATABASE: fireflyiii
+      DB_USERNAME: postgres
+      DB_PASSWORD: "${SECRET_POSTGRES_ADMIN_PASS}"
+      APP_KEY: "${FIREFLYIII_APP_KEY}"
+    service:
+      main:
+        ports:
+          http:
+            port: 8080
+    ingress:
+      main:
+        enabled: true
+        ingressClassName: nginx
+        annotations:
+          hajimari.io/appName: firefly-iii
+          hajimari.io/icon: mdi:cash-clock
+        hosts:
+          - host: &host "money.${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                pathType: Prefix
+        tls:
+          - hosts:
+              - *host
+    persistence:
+      data:
+        enabled: true
+        existingClaim: firefly-iii-data
+        mountPath: /var/www/html/firefly-iii/storage/upload
+    resources:
+      requests:
+        memory: 130Mi
+        cpu: 15m
+      limits:
+        memory: 800Mi
+        cpu: 500m
