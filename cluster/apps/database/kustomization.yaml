@@ -7,4 +7,3 @@ resources:
   - pgadmin
   - redis
   - authentik
-  - firefly-iii
