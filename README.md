@@ -32,3 +32,10 @@ The way Flux works for me here is it will recursively search the [cluster/apps](
 
 [Renovate](https://github.com/renovatebot/renovate) watches my **entire** repository looking for dependency updates, when they are found a PR is automatically created. When some PRs are merged [Flux](https://github.com/fluxcd/flux2) applies the changes to my cluster.
 
+### 🔧 Hardware
+
+<details>
+  <summary>Click for Pic</summary>
+
+  <img src="https://nextcloud.mzone.ro/apps/files_sharing/publicpreview/2zda3CWE5aHCNqG?file=/&fileId=158815&x=3584&y=2240&a=true" align="center" width="200px" alt="rack"/>
+</details>
