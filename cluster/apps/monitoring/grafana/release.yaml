@@ -36,13 +36,13 @@ spec:
       GF_DATE_FORMATS_FULL_DATE: "DD.MM.YYYY hh:mm:ss"
       GF_SECURITY_ALLOW_EMBEDDING: true
       GF_SECURITY_COOKIE_SAMESITE: grafana
-      GF_AUTH_OAUTH_ALLOW_INSECURE_EMAIL_LOOKUP: true
     envFromSecrets:
       - name: grafana-auth-secrets
     grafana.ini:
       auth:
         signout_redirect_url: "https://auth.${SECRET_DOMAIN}/application/o/grafana/end-session/"
         oauth_auto_login: true
+        oauth_allow_insecure_email_lookup: true
       auth.generic_oauth:
         name: Authentik
         enabled: true
