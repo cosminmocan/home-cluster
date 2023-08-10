@@ -78,7 +78,6 @@ spec:
           #location /remote {
           #    return 301 /remote.php$request_uri;
           #}
-        nginx.ingress.kubernetes.io/enable-global-auth: "false"
 
       hosts:
         - host: &host cloud.${SECRET_DOMAIN}
