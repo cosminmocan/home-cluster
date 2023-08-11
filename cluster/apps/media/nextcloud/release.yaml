@@ -102,7 +102,7 @@ spec:
         - name: nfsmedia
           nfs:
             server: "${STORAGE_NAS_IP}"
-            path: /volume1/kubeNFS
+            path: /volume1/kubeNFS/nextcloud
       extraVolumeMounts:
         - name: nfsmedia
           mountPath: /nextcloud
