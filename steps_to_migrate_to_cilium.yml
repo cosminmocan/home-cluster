@@ -1,0 +1,33 @@
+###STEPS TO MIGRATE###
+cilium install --helm-values values-migration.yaml --helm-auto-gen-values values-initial.yaml ### this doesn't work in my case cilium-cli: v0.15.20
+###working method
+cilium install --helm-values values-migration.yaml --dry-run-helm-values values-initial.yaml > values-initial.yaml
+
+####
+####starting the install
+helm repo add cilium https://helm.cilium.io/
+helm install cilium cilium/cilium --namespace kube-system --values values-initial.yaml
+
+###Apply a cilium node config to configure cilium in migration mode, note , it will be applied --server-side , meaning , only on the control plane
+kubectl apply --server-side -f take-over-cni.yaml
+
+###verify that is was applied
+kubectl -n kube-system get ciliumnodeconfigs.cilium.io cilium-default -o yaml
+###while the config will be applied on the cluster, the action itself wont apply on any node yet, as it only applies to nodes that have the "io.cilium.migration/cilium-default:" set to "true"
+
+###starting to cordon worker nodes###
+NODE="node-name-here"
+kubectl cordon $NODE
+###draining the node
+kubectl drain $NODE --ignore-daemonsets
+
+##labeling the node so that CiliumConfigNode applies to it
+kubectl label node $NODE --overwrite "io.cilium.migration/cilium-default=true"
+
+###Restarting cilium on the node so that the cni config will be recreated
+kubectl -n kube-system delete pod --field-selector spec.nodeName=$NODE -l k8s-app=cilium
+kubectl -n kube-system rollout status ds/cilium -w
+rebooting the node
+
+###After reboot we verify that the POD CIDR use by cilium to allocate IPs to the pods
+kubectl get cn $NODE -o jsonpath='{.spec.ipam.podCIDRs[0]}'
