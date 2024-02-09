@@ -42,6 +42,19 @@ spec:
         ports:
           http:
             port: 8080
+      bittorrent:
+        enabled: true
+        type: LoadBalancer
+        annotations:
+          metallb.universe.tf/loadBalancerIPs: "192.168.100.49"
+        externalIPs: ["192.168.100.49"]
+        ports:
+          bittorrent:
+            enabled: true
+            port: 3389
+            protocol: TCP
+            targetPort: 3389
+        externalTrafficPolicy: Local
     ingress:
       main:
         enabled: true
