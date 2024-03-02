@@ -28,18 +28,18 @@ spec:
     - name: postgresql
       namespace: database
   values:
+    authentik:
+      log_level: info
+      secret_key: "${SECRET_AUTHENTIK_SECRET_KEY}"
+      postgresql:
+        host: "${POSTGRES_HOST_ADDRESS}"
+        name: "authentik"
+        user: "postgres"
+        password: "${SECRET_POSTGRES_ADMIN_PASS}"
+      redis:
+        host: "${REDIS_HOST_ADDRESS}"
+        password: ""
     server:
-      authentik:
-        log_level: info
-        secret_key: "${SECRET_AUTHENTIK_SECRET_KEY}"
-        postgresql:
-          host: "${POSTGRES_HOST_ADDRESS}"
-          name: "authentik"
-          user: "postgres"
-          password: "${SECRET_POSTGRES_ADMIN_PASS}"
-        redis:
-          host: "${REDIS_HOST_ADDRESS}"
-          password: ""
       ingress:
         enabled: true
         ingressClassName: "nginx"
