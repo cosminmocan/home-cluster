@@ -50,9 +50,9 @@ spec:
           external-dns.alpha.kubernetes.io/target: "${CLOUDFLARE_DDNS_RECORD}"
         hosts:
           - host: &host auth.${SECRET_DOMAIN}
-            paths:
-              - path: /
-                pathType: Prefix
+        paths:
+          - path: /
+            pathType: Prefix
         tls:
           - hosts:
               - *host
