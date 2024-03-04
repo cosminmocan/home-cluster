@@ -42,6 +42,8 @@ spec:
           value: "6379"
         - name: REDIS_HOST_PASSWORD
           value: ""
+        - name: PHP_UPLOAD_LIMIT
+          value: "16G"
       securityContext:
         runAsUser: 1024
         runAsGroup: 100
