@@ -15,7 +15,7 @@ spec:
     - nfsvers=4.1
   nfs:
     server: "${STORAGE_NAS_IP}"
-    path: "volume1/kubeNFS/nextcloud"
+    path: "/volume1/kubeNFS/nextcloud"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
