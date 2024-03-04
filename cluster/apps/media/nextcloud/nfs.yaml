@@ -1,20 +1,29 @@
 ---
 apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nextcloud-data
+spec:
+  storageClassName: ""
+  capacity:
+    storage: 1T
+  accessModes:
+    - ReadWriteMany
+  mountOptions:
+    - local_lock=posix
+    - nfsvers=4.1
+  nfs:
+    server: "${STORAGE_NAS_IP}"
+    path: "volume1/kubeNFS/nextcloud"
+---
+apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: nextcloud-data
-  namespace: media
 spec:
-  capacity:
-    storage: 1Ti
-  volumeMode: Filesystem
   accessModes:
     - ReadWriteMany
-  persistentVolumeReclaimPolicy: Retain
-  mountOptions:
-    - hard
-    - nfsvers=4.1
-  storageClassName: "nfs-client"
+  storageClassName: ""
   resources:
     requests:
-      storage: 1Ti
+      storage: 1T
