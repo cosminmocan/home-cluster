@@ -40,7 +40,7 @@ spec:
       securityContext:
         runAsUser: 1024
         runAsGroup: 100
-        runAsNonRoot: true
+        runAsNonRoot: false
       host: &host cloud.${SECRET_DOMAIN}
       phpConfigs:
         uploadLimit.ini: |
@@ -76,7 +76,7 @@ spec:
       securityContext:
         runAsUser: 1024
         runAsGroup: 100
-        runAsNonRoot: true
+        runAsNonRoot: false
     ingress:
       enabled: true
       className: nginx
