@@ -5,7 +5,7 @@ metadata:
   name: nextcloud-data
   namespace: media
 spec:
-  storageClassName: ""
+  storageClassName: "nfs-client"
   capacity:
     storage: 1T
   accessModes:
@@ -25,7 +25,7 @@ metadata:
 spec:
   accessModes:
     - ReadWriteMany
-  storageClassName: ""
+  storageClassName: "nfs-client"
   resources:
     requests:
       storage: 1T
