@@ -30,9 +30,8 @@ spec:
       namespace: database
   values:
     image:
-      flavor: fpm-alpine
-    nginx:
-      enabled: true
+      repository: docker.io/library/nextcloud
+      tag: 28.0.2@sha256:00a5983ec3353ed71df9c6df644a84c3d8a88ac7b93d8f591fdcbb5eaa8fb459
     nextcloud:
       datadir: /var/www/data
       extraEnv:
@@ -84,7 +83,8 @@ spec:
       annotations:
         external-dns.alpha.kubernetes.io/target: "${CLOUDFLARE_DDNS_RECORD}"
         hajimari.io/icon: mdi:dropbox
-        nginx.ingress.kubernetes.io/proxy-body-size: "4G"
+        nginx.ingress.kubernetes.io/proxy-body-size: 4G
+        nginx.ingress.kubernetes.io/enable-global-auth: "false"
         nginx.ingress.kubernetes.io/server-snippet: |-
           server_tokens off;
           proxy_hide_header X-Powered-By;
