@@ -37,10 +37,6 @@ spec:
       extraEnv:
         - name: PHP_UPLOAD_LIMIT
           value: "16G"
-      securityContext:
-        runAsUser: 1024
-        runAsGroup: 100
-        runAsNonRoot: false
       host: &host cloud.${SECRET_DOMAIN}
       phpConfigs:
         uploadLimit.ini: |
@@ -73,10 +69,6 @@ spec:
       password: "${SECRET_POSTGRES_ADMIN_PASS}"
     cronjob:
       enabled: true
-      securityContext:
-        runAsUser: 1024
-        runAsGroup: 100
-        runAsNonRoot: false
     ingress:
       enabled: true
       className: nginx
