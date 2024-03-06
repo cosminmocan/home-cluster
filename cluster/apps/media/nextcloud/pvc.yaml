@@ -11,16 +11,3 @@ spec:
     requests:
       storage: 8Gi
   storageClassName: longhorn
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: nextcloud-data
-  namespace: media
-spec:
-  accessModes:
-    - ReadWriteMany
-  resources:
-    requests:
-      storage: 8Gi
-  storageClassName: longhorn
