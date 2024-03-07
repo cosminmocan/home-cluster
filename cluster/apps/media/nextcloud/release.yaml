@@ -90,8 +90,9 @@ spec:
     #username: admin
     #password: password
     redis:
-      enabled: false
-      # password: set in secret
+      enabled: true
+      auth:
+        password: "someirrelevantpass"
       master:
         persistence:
           enabled: false
@@ -114,13 +115,6 @@ spec:
 
     nextcloud:
       host: cloud.${SECRET_DOMAIN}
-      extraEnv:
-        - name: REDIS_HOST
-          value: "${REDIS_HOST_ADDRESS}"
-        - name: REDIS_HOST_PORT
-          value: "6379"
-        - name: REDIS_HOST_PASSWORD
-          value: ""
       phpConfigs:
         uploadLimit.ini: |
           upload_max_filesize = 16G
