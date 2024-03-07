@@ -37,10 +37,6 @@ spec:
       extraEnv:
         - name: PHP_UPLOAD_LIMIT
           value: "16G"
-      securityContext:
-        runAsUser: 1024
-        runAsGroup: 100
-        runAsNonRoot: true
       host: &host cloud.${SECRET_DOMAIN}
       phpConfigs:
         uploadLimit.ini: |
@@ -71,12 +67,6 @@ spec:
       database: nextcloud
       user: "postgres"
       password: "${SECRET_POSTGRES_ADMIN_PASS}"
-    cronjob:
-      enabled: true
-      securityContext:
-        runAsUser: 1024
-        runAsGroup: 100
-        runAsNonRoot: true
     ingress:
       enabled: true
       className: nginx
