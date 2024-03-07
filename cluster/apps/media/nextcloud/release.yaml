@@ -1,42 +1,82 @@
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+# yaml-language-server: $schema=https://github.com/fluxcd-community/flux2-schemas/raw/main/helmrelease-helm-v2beta2.json
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: nextcloud
   namespace: media
 spec:
-  interval: 5m
+  timeout: 15m
+  interval: 30m
   chart:
     spec:
-      # renovate: registryUrl=https://nextcloud.github.io/helm/
       chart: nextcloud
       version: 4.6.3
       sourceRef:
         kind: HelmRepository
         name: chart-nextcloud
         namespace: flux-system
-      interval: 5m
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
   dependsOn:
     - name: postgresql
       namespace: database
-  # See https://github.com/nextcloud/helm/blob/master/charts/nextcloud/values.yaml
   values:
     image:
-      repository: nextcloud
-      tag: 28.0.3-fpm-alpine
-      flavor: fpm-alpine
-
-    env:
-      PHP_MEMORY_LIMIT: 256M
-
+      repository: docker.io/library/nextcloud
+      tag: 28.0.2@sha256:00a5983ec3353ed71df9c6df644a84c3d8a88ac7b93d8f591fdcbb5eaa8fb459
+    nextcloud:
+      datadir: /var/www/data
+      extraEnv:
+        - name: PHP_UPLOAD_LIMIT
+          value: "16G"
+      host: &host cloud.${SECRET_DOMAIN}
+      phpConfigs:
+        uploadLimit.ini: |
+          upload_max_filesize = 16G
+          post_max_size = 16G
+          max_input_time = 3600
+          max_execution_time = 3600
+          default_phone_region = RO
+      configs:
+        proxy.config.php: |-
+          <?php
+          $CONFIG = array (
+            'trusted_proxies' =>
+            array(
+               0 => '10.40.0.0/8',
+            ),
+            'forwarded_for_headers' =>
+            array (
+              0 => 'HTTP_X_FORWARDED_FOR',
+            ),
+          );
+    internalDatabase:
+      enabled: false
+    externalDatabase:
+      enabled: true
+      type: postgresql
+      host: "${POSTGRES_HOST_ADDRESS}:5432"
+      database: nextcloud
+      user: "postgres"
+      password: "${SECRET_POSTGRES_ADMIN_PASS}"
+    cronjob:
+      enabled: true
     ingress:
       enabled: true
+      className: nginx
       annotations:
-        hajimari.io/enable: "true"
-        hajimari.io/icon: simple-icons:nextcloud
-        hajimari.io/info: File and Calendar server
-        hajimari.io/group: tools
+        external-dns.alpha.kubernetes.io/target: "${CLOUDFLARE_DDNS_RECORD}"
+        hajimari.io/icon: mdi:dropbox
         nginx.ingress.kubernetes.io/proxy-body-size: 4G
+        nginx.ingress.kubernetes.io/enable-global-auth: "false"
         nginx.ingress.kubernetes.io/server-snippet: |-
           server_tokens off;
           proxy_hide_header X-Powered-By;
@@ -83,77 +123,14 @@ spec:
           #    return 301 /remote.php$request_uri;
           #}
 
-        nginx.ingress.kubernetes.io/enable-global-auth: "false"
+      path: /
+      pathType: Prefix
       tls:
-      - hosts:
-        - cloud.${SECRET_DOMAIN}
-    #username: admin
-    #password: password
-    redis:
-      enabled: false
-      # password: set in secret
-      master:
-        persistence:
-          enabled: false
-      replica:
-        persistence:
-          enabled: false
-    internalDatabase:
-      enabled: false
-    externalDatabase:
-      enabled: true
-      type: postgresql
-      host: "${POSTGRES_HOST_ADDRESS}:5432"
-      database: nextcloud
-      user: "postgres"
-      password: "${SECRET_POSTGRES_ADMIN_PASS}"
-    cronjob:
-      enabled: true
-      failedJobsHistoryLimit: 1
-      successfulJobsHistoryLimit: 1
-
-    nextcloud:
-      host: cloud.${SECRET_DOMAIN}
-      phpConfigs:
-        uploadLimit.ini: |
-          upload_max_filesize = 16G
-          post_max_size = 16G
-          max_input_time = 3600
-          max_execution_time = 3600
-          default_phone_region = RO
-      configs:
-        proxy.config.php: |-
-          <?php
-          $CONFIG = array (
-            'trusted_proxies' =>
-            array(
-               0 => '10.40.0.0/8',
-            ),
-            'forwarded_for_headers' =>
-            array (
-              0 => 'HTTP_X_FORWARDED_FOR',
-            ),
-          );
-        gitops.config.php: |-
-          <?php
-          $CONFIG = array (
-            'appstoreenabled' => true,
-            #'appstoreurl' => 'https://apps.nextcloud.com/api/v0',
-          );
-        #Circumvention for client freezes - https://github.com/nextcloud/desktop/issues/5094
-        bulkupload.config.php: |-
-          <?php
-          $CONFIG = array (
-            'bulkupload.enabled' => false,
-          );
-
-    livenessProbe:
-      enabled: false
-    readinessProbe:
-      enabled: false
-
+        - hosts:
+            - *host
     persistence:
       enabled: true
-      existingClaim: nextcloud-data
-
-
+      existingClaim: nextcloud-config
+      nextcloudData:
+        enabled: true
+        existingClaim: nextcloud-data
