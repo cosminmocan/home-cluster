@@ -58,7 +58,7 @@ spec:
           $CONFIG = array (
             'trusted_proxies' => array(
               0 => '127.0.0.1',
-              1 => '10.42.0.0/16',
+              1 => '10.40.2.0/16',
             ),
             'forwarded_for_headers' => array('HTTP_X_FORWARDED_FOR'),
           );
