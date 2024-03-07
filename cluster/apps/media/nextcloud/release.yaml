@@ -51,6 +51,7 @@ spec:
         fsGroup: 1000
         runAsNonRoot: true
         fsGroupChangePolicy: "OnRootMismatch"
+        readOnlyRootFilesystem: false
       datadir: /var/www/data
 
     nginx:
@@ -81,6 +82,7 @@ spec:
         fsGroup: 1000
         runAsNonRoot: true
         fsGroupChangePolicy: "OnRootMismatch"
+        readOnlyRootFilesystem: false
     resources:
       requests:
         cpu: 34m
