@@ -13,6 +13,7 @@ spec:
   mountOptions:
     - nfsvers=4.1
     - hard
+    - async
   nfs:
     server: "${STORAGE_NAS_IP}"
     path: "/volume1/kubeNFS/nextcloud"
