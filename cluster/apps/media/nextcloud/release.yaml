@@ -128,7 +128,7 @@ spec:
           $CONFIG = array (
             'trusted_proxies' =>
             array(
-               0 => '10.40.0.0/8',
+               0 => '10.40.0.0/16',
             ),
             'forwarded_for_headers' =>
             array (
@@ -155,7 +155,4 @@ spec:
 
     persistence:
       enabled: true
-      existingClaim: "nextcloud-config"
-      nextcloudData:
-        enabled: true
-        existingClaim: "nextcloud-data"
+      existingClaim: nextcloud-data
