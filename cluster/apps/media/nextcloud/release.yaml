@@ -1,12 +1,13 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2beta2.json
+# yaml-language-server: $schema=https://github.com/fluxcd-community/flux2-schemas/raw/main/helmrelease-helm-v2beta2.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
-  name: &app nextcloud
+  name: nextcloud
   namespace: media
 spec:
-  interval: 15m
+  timeout: 15m
+  interval: 30m
   chart:
     spec:
       chart: nextcloud
@@ -15,49 +16,27 @@ spec:
         kind: HelmRepository
         name: chart-nextcloud
         namespace: flux-system
-      interval: 15m
   install:
     remediation:
-      retries: 5
+      retries: 3
   upgrade:
+    cleanupOnFail: true
     remediation:
-      retries: 5
+      retries: 3
+  uninstall:
+    keepHistory: false
   values:
-    fullnameOverride: *app
     image:
-      repository: nextcloud
-      tag: 28.0.3-fpm-alpine
       flavor: fpm-alpine
-    ingress:
-      enabled: true
-      className: nginx
-      annotations:
-        external-dns.alpha.kubernetes.io/target: "${CLOUDFLARE_DDNS_RECORD}"
-        nginx.ingress.kubernetes.io/proxy-body-size: 512M
-        nginx.ingress.kubernetes.io/proxy-buffering: "off"
-        nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
-        nginx.ingress.kubernetes.io/server-snippet: |
-          server_tokens off;
-          location ^~ /.well-known {
-            location = /.well-known/carddav { return 301 /remote.php/dav/; }
-            location = /.well-known/caldav { return 301 /remote.php/dav/; }
-            location = /.well-known/acme-challenge { try_files $uri $uri/ =404; }
-            location = /.well-known/pki-validation { try_files $uri $uri/ =404; }
-            return 301 /index.php$request_uri;
-          }
-          location ~ ^/(?:build|tests|config|lib|3rdparty|templates|data)(?:$|/)  { return 404; }
-          location ~ ^/(?:\.|autotest|occ|issue|indie|db_|console)                { return 404; }
-      tls:
-        - hosts:
-            - &host cloud.${SECRET_DOMAIN}
-    nextcloud:
-      host: *host
-      datadir: /var/www/data
     nginx:
       enabled: true
-      image:
-        repository: nginx
-        tag: 1.25-alpine
+    nextcloud:
+      datadir: /var/www/data
+      host: &host cloud.${SECRET_DOMAIN}
+      securityContext:
+        runAsUser: 1026
+        runAsGroup: 100
+        runAsNonRoot: true
     internalDatabase:
       enabled: false
     externalDatabase:
@@ -67,17 +46,56 @@ spec:
       database: nextcloud
       user: "postgres"
       password: "${SECRET_POSTGRES_ADMIN_PASS}"
+    ingress:
+      enabled: true
+      className: nginx
+      annotations:
+        external-dns.alpha.kubernetes.io/target: "${CLOUDFLARE_DDNS_RECORD}"
+        hajimari.io/icon: mdi:dropbox
+        nginx.ingress.kubernetes.io/proxy-body-size: "4G"
+        nginx.ingress.kubernetes.io/proxy-buffering: "off"
+        nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
+        nginx.ingress.kubernetes.io/server-snippet: |-
+          server_tokens off;
+          proxy_hide_header X-Powered-By;
+
+          rewrite ^/.well-known/webfinger /public.php?service=webfinger last;
+          rewrite ^/.well-known/host-meta /public.php?service=host-meta last;
+          rewrite ^/.well-known/host-meta.json /public.php?service=host-meta-json;
+          location = /.well-known/carddav {
+            return 301 $scheme://$host/remote.php/dav;
+          }
+          location = /.well-known/caldav {
+            return 301 $scheme://$host/remote.php/dav;
+          }
+          location = /robots.txt {
+            allow all;
+            log_not_found off;
+            access_log off;
+          }
+          location ~ ^/(?:build|tests|config|lib|3rdparty|templates|data)/ {
+            deny all;
+          }
+          location ~ ^/(?:autotest|occ|issue|indie|db_|console) {
+            deny all;
+          }
+      path: /
+      pathType: Prefix
+      tls:
+        - hosts:
+            - *host
     persistence:
       enabled: true
       existingClaim: nextcloud-config
       nextcloudData:
         enabled: true
         existingClaim: nextcloud-data
-    cronjob:
+        accessMode: ReadWriteMany
+    # this seems to be required for nextcloud initialization which takes a long time
+    startupProbe:
       enabled: true
-    resources:
-      requests:
-        cpu: 34m
-        memory: 204Mi
-      limits:
-        memory: 363Mi
+      initialDelaySeconds: 10
+      periodSeconds: 20
+      timeoutSeconds: 5
+      failureThreshold: 30
+      successThreshold: 1
