@@ -11,8 +11,8 @@ spec:
   accessModes:
     - ReadWriteMany
   mountOptions:
-    - local_lock=posix
     - nfsvers=4.1
+    - hard
   nfs:
     server: "${STORAGE_NAS_IP}"
     path: "/volume1/kubeNFS/nextcloud"
