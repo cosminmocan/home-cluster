@@ -87,12 +87,8 @@ spec:
       tls:
       - hosts:
         - cloud.${SECRET_DOMAIN}
-    #username: admin
-    #password: password
     redis:
-      enabled: true
-      auth:
-        password: "someirrelevantpass"
+      enabled: false
       master:
         persistence:
           enabled: false
@@ -128,7 +124,7 @@ spec:
           $CONFIG = array (
             'trusted_proxies' =>
             array(
-               0 => '10.40.0.0/16',
+               0 => '10.40.0.0/8',
             ),
             'forwarded_for_headers' =>
             array (
