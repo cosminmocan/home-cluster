@@ -7,6 +7,7 @@ metadata:
     hajimari.io/appName: Nextology
     hajimari.io/icon: simple-icons:nextcloud
     external-dns.alpha.kubernetes.io/target: "${CLOUDFLARE_DDNS_RECORD}"
+    external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
 
 spec:
   ingressClassName: nginx
