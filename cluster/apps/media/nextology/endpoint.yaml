@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: nextology
+  namespace: media
+subsets:
+- addresses:
+  - ip: 192.168.100.95
+  ports:
+  - port: 8081
