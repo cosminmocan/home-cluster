@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nextologyingress
+  namespace: media
+  annotations:
+    hajimari.io/appName: Nextology
+    hajimari.io/icon: simple-icons:nextcloud
+    external-dns.alpha.kubernetes.io/target: "${CLOUDFLARE_DDNS_RECORD}"
+    external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
+    nginx.ingress.kubernetes.io/proxy-body-size: "1G"
+
+
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: &host "nc.${SECRET_DOMAIN}"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: nextology
+                port:
+                  number: 80
+  tls:
+    - hosts:
+      - *host
