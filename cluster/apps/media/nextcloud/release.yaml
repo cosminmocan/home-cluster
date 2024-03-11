@@ -90,7 +90,6 @@ spec:
             'appstoreenabled' => true,
             #'appstoreurl' => 'https://apps.nextcloud.com/api/v0',
           );
-        #Circumvention for client freezes - https://github.com/nextcloud/desktop/issues/5094
         bulkupload.config.php: |-
           <?php
           $CONFIG = array (
