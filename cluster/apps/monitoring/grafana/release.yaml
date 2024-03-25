@@ -27,6 +27,7 @@ spec:
   uninstall:
     keepHistory: false
   values:
+    assertNoLeakedSecrets: false
     rbac:
       pspEnabled: false
     env:
