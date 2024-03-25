@@ -50,6 +50,7 @@ spec:
     grafana:
       enabled: false
       forceDeployDashboards: true
+      assertNoLeakedSecrets: false
     nodeExporter:
       enabled: true
     prometheusOperator:
