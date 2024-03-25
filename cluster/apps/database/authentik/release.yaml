@@ -1,5 +1,5 @@
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: authentik
@@ -39,21 +39,22 @@ spec:
       redis:
         host: "${REDIS_HOST_ADDRESS}"
         password: ""
-    ingress:
-      enabled: true
-      ingressClassName: "nginx"
-      annotations:
-        hajimari.io/enable: "true"
-        hajimari.io/icon: simple-icons:webauthn
-        hajimari.io/appName: Authentik
-        external-dns.alpha.kubernetes.io/target: "${CLOUDFLARE_DDNS_RECORD}"
-      hosts:
-        - host: &host auth.${SECRET_DOMAIN}
-          paths:
-            - path: /
-              pathType: Prefix
-      tls:
-        - hosts:
-            - *host
-    persistentVolume:
-      enabled: false
+    server:
+      ingress:
+        enabled: true
+        ingressClassName: "nginx"
+        annotations:
+          hajimari.io/enable: "true"
+          hajimari.io/icon: simple-icons:webauthn
+          hajimari.io/appName: Authentik
+          external-dns.alpha.kubernetes.io/target: "${CLOUDFLARE_DDNS_RECORD}"
+        hosts:
+          - host: &host auth.${SECRET_DOMAIN}
+            paths:
+              - path: /
+                pathType: Prefix
+        tls:
+          - hosts:
+              - *host
+      persistentVolume:
+        enabled: false
