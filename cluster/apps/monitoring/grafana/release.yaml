@@ -54,7 +54,7 @@ spec:
         role_attribute_path: |
           contains(groups[*], 'Grafana Admins') && 'Admin' || 'Viewer'
       auth.basic:
-        enabled: false
+        enabled: true
       server:
         root_url: "https://grafana.${SECRET_DOMAIN}"
       paths:
