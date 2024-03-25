@@ -38,7 +38,7 @@ spec:
           value: "${TIMEZONE}"
       service:
         annotations:
-          metallb.universe.tf/loadBalancerIPs: "${NIGNX_INGRESS_IP}"
+          io.cilium/lb-ipam-ips: "${NIGNX_INGRESS_IP}"
         externalTrafficPolicy: Local
       publishService:
         enabled: true
