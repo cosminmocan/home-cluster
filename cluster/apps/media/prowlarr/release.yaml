@@ -17,7 +17,7 @@ spec:
   values:
     image:
       repository: ghcr.io/onedr0p/prowlarr-develop
-      tag: 1.13.0.4217
+      tag: 1.15.0.4361
     hostname: prowlarr
     env:
       TZ: ${TIMEZONE}
