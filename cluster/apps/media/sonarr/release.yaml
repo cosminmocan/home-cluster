@@ -17,7 +17,7 @@ spec:
   values:
     image:
       repository: ghcr.io/onedr0p/sonarr
-      tag: 4.0.0.748
+      tag: 4.0.4.1491
     env:
       TZ: ${TIMEZONE}
       SONARR__LOG_LEVEL: info
