@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: haingress
+  namespace: media
+  annotations:
+    hajimari.io/appName: HomeAssistant
+    hajimari.io/icon: simple-icons:homeassistant
+    external-dns.alpha.kubernetes.io/target: "${CLOUDFLARE_DDNS_RECORD}"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: &host "ha.${SECRET_DOMAIN}"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ha
+                port:
+                  number: 80
+  tls:
+    - hosts:
+      - *host
