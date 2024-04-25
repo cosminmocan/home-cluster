@@ -7,8 +7,8 @@ resources:
   - prowlarr
   - jellyseerr
   - radarr
-  - sonarr
   - jellyfin
   - flaresolverr
   - guacamole
   - nextology
+  - ha
