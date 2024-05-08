@@ -5,6 +5,6 @@ metadata:
   namespace: media
 subsets:
 - addresses:
-  - ip: 192.168.100.95
+  - ip: 192.168.100.55
   ports:
   - port: 8081
