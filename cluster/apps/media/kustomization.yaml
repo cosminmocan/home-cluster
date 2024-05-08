@@ -12,3 +12,4 @@ resources:
   - guacamole
   - nextology
   - homeassistant
+  - testcloud
