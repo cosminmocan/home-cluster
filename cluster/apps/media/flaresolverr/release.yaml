@@ -39,4 +39,4 @@ spec:
         memory: 150Mi
       limits:
         cpu: 1
-        memory: 300Mi
+        memory: 800Mi
