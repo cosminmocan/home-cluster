@@ -4,7 +4,7 @@ name: "[META] Sync labels"
 on:
   workflow_dispatch:
   push:
-    branches: ["main"]
+    branches: ["main-talos"]
     paths: [".github/labels.yaml"]
 
 jobs:

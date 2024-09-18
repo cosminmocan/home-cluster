@@ -5,7 +5,7 @@ metadata:
   name: authentik-ldap
   namespace: database
   annotations:
-    metallb.universe.tf/loadBalancerIPs: "${LDAP_OUTPOST_IP}"
+    io.cilium/lb-ipam-ips: "${LDAP_OUTPOST_IP}"
 spec:
   type: LoadBalancer
   externalTrafficPolicy: Local
