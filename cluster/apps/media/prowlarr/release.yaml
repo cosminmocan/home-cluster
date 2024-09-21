@@ -41,8 +41,8 @@ spec:
         enabled: true
         ingressClassName: nginx
         annotations:
-          hajimari.io/appName: Prowlarr
-          hajimari.io/icon: mdi:cat
+          gethomepage.dev/name: Prowlarr
+          gethomepage.dev/icon: mdi:cat
         hosts:
           - host: &host "prowlarr.${SECRET_DOMAIN}"
             paths:

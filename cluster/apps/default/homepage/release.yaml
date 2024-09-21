@@ -2,17 +2,17 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: hajimari
+  name: homepage
   namespace: default
 spec:
   interval: 15m
   chart:
     spec:
-      chart: hajimari
+      chart: jameswynn/homepage
       version: 2.0.2
       sourceRef:
         kind: HelmRepository
-        name: chart-hajimari
+        name: chart-homepage
         namespace: flux-system
   install:
     createNamespace: true
@@ -27,30 +27,39 @@ spec:
   values:
     env:
       TZ: ${TIMEZONE}
-    hajimari:
-      title: Apps
-      lightTheme: passion
-      darkTheme: espresso
-      alwaysTargetBlank: true
-      showGreeting: false
-      showAppGroups: true
-      showAppStatus: true
-      showBookmarks: false
-      showBookmarkGroups: false
-      showGlobalBookmarks: false
-      showAppUrls: false
-      defaultEnable: true
-      namespaceSelector:
-        any: true
+    config:
+      widgets:
+        # show the kubernetes widget, with the cluster summary and individual nodes
+        - kubernetes:
+            cluster:
+              show: true
+              cpu: true
+              memory: true
+              showLabel: true
+              label: "cluster"
+            nodes:
+              show: true
+              cpu: true
+              memory: true
+              showLabel: true
+        - search:
+            provider: duckduckgo
+            target: _blank
+      kubernetes:
+        mode: cluster
+    serviceAccount:
+      create: true
+      name: homepage
+    enableRbac: true
     ingress:
       main:
         enabled: true
         ingressClassName: "nginx"
         annotations:
-          hajimari.io/enable: "false"
+          gethomepage.dev/enabled: "false"
           external-dns.alpha.kubernetes.io/target: "${CLOUDFLARE_DDNS_RECORD}"
         hosts:
-          - host: &host apps.${SECRET_DOMAIN}
+          - host: &host home.${SECRET_DOMAIN}
             paths:
               - path: /
                 pathType: Prefix
@@ -62,7 +71,7 @@ spec:
         enabled: true
         type: emptyDir
     podAnnotations:
-      configmap.reloader.stakater.com/reload: hajimari-settings
+      configmap.reloader.stakater.com/reload: homepage-settings
     resources:
       requests:
         cpu: 15m
