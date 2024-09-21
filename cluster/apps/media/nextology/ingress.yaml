@@ -1,11 +1,12 @@
+---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: nextologyingress
   namespace: media
   annotations:
-    hajimari.io/appName: Nextology
-    hajimari.io/icon: simple-icons:nextcloud
+    gethomepage.dev/name: Nextology
+    gethomepage.dev/icon: simple-icons:nextcloud
     external-dns.alpha.kubernetes.io/target: "${CLOUDFLARE_DDNS_RECORD}"
     external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
     nginx.ingress.kubernetes.io/proxy-body-size: "0"
@@ -55,8 +56,6 @@ metadata:
       #}
 
 
-
-
 spec:
   ingressClassName: nginx
   rules:
@@ -72,4 +71,4 @@ spec:
                   number: 80
   tls:
     - hosts:
-      - *host
+        - *host

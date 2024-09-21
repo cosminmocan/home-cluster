@@ -39,8 +39,8 @@ spec:
         enabled: true
         ingressClassName: nginx
         annotations:
-          hajimari.io/appName: radarr
-          hajimari.io/icon: filmstrip
+          gethomepage.dev/name: radarr
+          gethomepage.dev/icon: filmstrip
         hosts:
           - host: &host "radarr.${SECRET_DOMAIN}"
             paths:
