@@ -45,7 +45,7 @@ spec:
         ingressClassName: "nginx"
         annotations:
           gethomepage.dev/enabled: "true"
-          gethomepage.dev/icon: simple-icons:webauthn
+          gethomepage.dev/icon: si-webauthn
           gethomepage.dev/name: Authentik
           external-dns.alpha.kubernetes.io/target: "${CLOUDFLARE_DDNS_RECORD}"
         hosts:
