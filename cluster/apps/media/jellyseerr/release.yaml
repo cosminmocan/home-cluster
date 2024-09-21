@@ -31,8 +31,8 @@ spec:
         enabled: true
         ingressClassName: nginx
         annotations:
-          hajimari.io/appName: Jellyseerr
-          hajimari.io/icon: mdi:jellyfish-outline
+          gethomepage.dev/name: Jellyseerr
+          gethomepage.dev/icon: mdi:jellyfish-outline
           external-dns.alpha.kubernetes.io/target: "${CLOUDFLARE_DDNS_RECORD}"
 
         hosts:
