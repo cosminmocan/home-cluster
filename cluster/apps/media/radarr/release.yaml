@@ -39,6 +39,7 @@ spec:
         enabled: true
         ingressClassName: nginx
         annotations:
+          gethomepage.dev/enabled: "true"
           gethomepage.dev/name: radarr
           gethomepage.dev/icon: filmstrip
         hosts:

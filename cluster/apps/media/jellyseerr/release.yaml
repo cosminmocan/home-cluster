@@ -31,8 +31,9 @@ spec:
         enabled: true
         ingressClassName: nginx
         annotations:
+          gethomepage.dev/enabled: "true"
           gethomepage.dev/name: Jellyseerr
-          gethomepage.dev/icon: mdi:jellyfish-outline
+          gethomepage.dev/icon: mdi-jellyfish-outline
           external-dns.alpha.kubernetes.io/target: "${CLOUDFLARE_DDNS_RECORD}"
 
         hosts:

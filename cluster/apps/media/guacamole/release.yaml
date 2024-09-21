@@ -47,6 +47,7 @@ spec:
         enabled: true
         ingressClassName: nginx
         annotations:
+          gethomepage.dev/enabled: "true"
           gethomepage.dev/name: Guacamole
           gethomepage.dev/icon: cbi:guacamole
           external-dns.alpha.kubernetes.io/target: "${CLOUDFLARE_DDNS_RECORD}"
