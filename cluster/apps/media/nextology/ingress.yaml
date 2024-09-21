@@ -5,8 +5,9 @@ metadata:
   name: nextologyingress
   namespace: media
   annotations:
+    gethomepage.dev/enabled: "true"
     gethomepage.dev/name: Nextology
-    gethomepage.dev/icon: simple-icons:nextcloud
+    gethomepage.dev/icon: si-nextcloud
     external-dns.alpha.kubernetes.io/target: "${CLOUDFLARE_DDNS_RECORD}"
     external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
     nginx.ingress.kubernetes.io/proxy-body-size: "0"

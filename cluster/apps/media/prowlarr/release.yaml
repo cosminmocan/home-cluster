@@ -41,8 +41,9 @@ spec:
         enabled: true
         ingressClassName: nginx
         annotations:
+          gethomepage.dev/enabled: "true"
           gethomepage.dev/name: Prowlarr
-          gethomepage.dev/icon: mdi:cat
+          gethomepage.dev/icon: mdi-cat
         hosts:
           - host: &host "prowlarr.${SECRET_DOMAIN}"
             paths:

@@ -5,8 +5,9 @@ metadata:
   name: longhorn-ingress
   namespace: longhorn-system
   annotations:
+    gethomepage.dev/enabled: "true"
     gethomepage.dev/name: Longhorn
-    gethomepage.dev/icon: clarity:hard-drive-disks-solid
+    gethomepage.dev/icon: mdi-harddisk
 spec:
   ingressClassName: nginx
   rules:

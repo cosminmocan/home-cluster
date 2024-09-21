@@ -56,8 +56,9 @@ spec:
         enabled: true
         ingressClassName: nginx
         annotations:
+          gethomepage.dev/enabled: "true"
           gethomepage.dev/name: qBitTorrent
-          gethomepage.dev/icon: material-symbols:cloud-download
+          gethomepage.dev/icon: mdi-cloud-download
           nginx.ingress.kubernetes.io/auth-url: |-
             http://ak-outpost-authentik-embedded-outpost.database.svc.cluster.local:9000/outpost.goauthentik.io/auth/nginx
           nginx.ingress.kubernetes.io/auth-signin: |-

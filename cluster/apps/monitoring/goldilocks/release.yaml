@@ -38,8 +38,9 @@ spec:
         enabled: true
         ingressClassName: nginx
         annotations:
+          gethomepage.dev/enabled: "true"
           gethomepage.dev/name: Goldilocks
-          gethomepage.dev/icon: mdi:align-vertical-top
+          gethomepage.dev/icon: mdi-align-vertical-top
         hosts:
           - host: &host goldilocks.${SECRET_DOMAIN}
             paths:

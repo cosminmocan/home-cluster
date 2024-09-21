@@ -6,7 +6,7 @@ metadata:
   namespace: media
   annotations:
     gethomepage.dev/name: homeassistant
-    hajimari.io/icon: simple-icons:homeassistant
+    hajimari.io/icon: si-homeassistant
     external-dns.alpha.kubernetes.io/target: "${CLOUDFLARE_DDNS_RECORD}"
     external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
 spec:

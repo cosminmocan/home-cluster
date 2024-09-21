@@ -5,8 +5,9 @@ metadata:
   name: jellyfiningress
   namespace: media
   annotations:
+    gethomepage.dev/enabled: "true"
     gethomepage.dev/name: jellyfin
-    gethomepage.dev/icon: simple-icons:jellyfin
+    gethomepage.dev/icon: si-jellyfin
     external-dns.alpha.kubernetes.io/target: "${CLOUDFLARE_DDNS_RECORD}"
     external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
 spec:
