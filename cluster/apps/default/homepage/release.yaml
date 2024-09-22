@@ -44,9 +44,10 @@ spec:
         - search:
             provider: duckduckgo
             target: _blank
-        - widget:
-            type: speedtest
-            url: http://speedtest.mzone.ro
+      widget:
+        type: speedtest
+        url: http://speed.mzone.ro
+        bitratePrecision: 3 # optional, default is 0
       kubernetes:
         mode: cluster
     serviceAccount:
