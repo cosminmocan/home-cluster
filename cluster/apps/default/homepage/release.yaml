@@ -47,7 +47,6 @@ spec:
         - widget:
             type: speedtest
             url: http://speedtest.mzone.ro
-            bitratePrecision: 2
       kubernetes:
         mode: cluster
     serviceAccount:
