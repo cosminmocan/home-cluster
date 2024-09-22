@@ -32,8 +32,6 @@ spec:
       TZ: "${TIMEZONE}"
       APP_KEY: "base64:5lEQnMgzUF0r1xPgEpx1OAGR00v7eRjgffz1i8CNGRg="
       APP_URL: "http://localhost"
-      PUID: 1000
-      PGID: 1000
       DB_CONNECTION: "sqlite"
     resources:
       limits:
@@ -43,11 +41,6 @@ spec:
         ports:
           http:
             port: 8080
-    podSecurityContext:
-      runAsUser: 1000
-      runAsGroup: 1000
-      fsGroup: 1000
-      fsGroupChangePolicy: "Always"
     ingress:
       main:
         enabled: true
