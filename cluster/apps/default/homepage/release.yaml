@@ -44,10 +44,12 @@ spec:
         - search:
             provider: duckduckgo
             target: _blank
-      widget:
-        type: speedtest
-        url: http://speed.mzone.ro
-        bitratePrecision: 3 # optional, default is 0
+        - Speedtest Tracker:
+            icon: mdi-speedometer
+            description: speedtest
+            widget:
+              type: speedtest
+              url: http://speed.mzone.ro
       kubernetes:
         mode: cluster
     serviceAccount:
