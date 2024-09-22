@@ -1,0 +1,66 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: speedtest
+  namespace: monitoring
+spec:
+  interval: 15m
+  chart:
+    spec:
+      chart: app-template
+      version: 1.5.1
+      sourceRef:
+        kind: HelmRepository
+        name: chart-bjw
+        namespace: flux-system
+  maxHistory: 3
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    image:
+      repository: lscr.io/linuxserver/speedtest-tracker
+      tag: 0.21.2
+    env:
+      TZ: "${TIMEZONE}"
+      APP_key: "base64:5lEQnMgzUF0r1xPgEpx1OAGR00v7eRjgffz1i8CNGRg="
+      APP_URL: "http://localhost"
+      DB_CONNECTION: "sqlite"
+    resources:
+      limits:
+        memory: 500Mi
+    service:
+      main:
+        ports:
+          http:
+            port: 8080
+    ingress:
+      main:
+        enabled: true
+        ingressClassName: nginx
+        annotations:
+          gethomepage.dev/enabled: "true"
+          gethomepage.dev/name: speedtest
+          gethomepage.dev/icon: cbi:speedtest
+          external-dns.alpha.kubernetes.io/target: "${CLOUDFLARE_DDNS_RECORD}"
+
+        hosts:
+          - host: &host remote.${SECRET_DOMAIN}
+            paths:
+              - path: /
+                pathType: Prefix
+        tls:
+          - hosts:
+              - *host
+    persistence:
+      config:
+        enabled: true
+        existingClaim: speedtest-config
+        mountPath: /config
