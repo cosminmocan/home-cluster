@@ -32,12 +32,12 @@ data:
     ---
     - Storage:
       - Synology:
-        href: http://homenas.${SECRET_DOMAIN}
+        href: http://19
         description: Synology NAS
         icon: si-synology
         widget:
           type: diskstation
-          url: http://${STORAGE_NAS_IP}
+          url: http://${STORAGE_NAS_IP}:5000
     - Networking:
       - SpeedTest:
           icon: si-speedtest
@@ -45,7 +45,7 @@ data:
           href: https://speed.${SECRET_DOMAIN}
           widget:
             type: speedtest
-            url: http://speed.${SECRET_DOMAIN}
+            url: http://speedtest.monitoring.svc.cluster.local
             bitratePrecision: 3
   widgets.yaml: |
     ---
