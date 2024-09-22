@@ -1,0 +1,126 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: homepage
+  namespace: default
+  annotations:
+    reloader.stakater.com/match: "true"
+data:
+  bookmarks.yaml: |
+    ---
+    - Developer:
+        - Github:
+            - abbr: GH
+              href: https://github.com/
+        - Hackaday:
+            - abbr: GH
+              href: https://hackaday.com/blog
+        - Hackernews:
+            - abbr: HN
+              href: https://news.ycombinator.com
+    - Social:
+        - Reddit:
+            - abbr: RE
+              href: https://reddit.com/
+
+    - Entertainment:
+        - YouTube:
+            - abbr: YT
+              href: https://youtube.com/
+  services.yaml: |
+    ---
+    - Storage:
+      - Synology:
+        href: http://homenas.${SECRET_DOMAIN}
+        description: Synology NAS
+        icon: si-synology
+        widget:
+          type: diskstation
+          url: http://${STORAGE_NAS_IP}
+    - Networking:
+      - SpeedTest:
+          icon: si-speedtest
+          description: Internet SpeedTest
+          href: https://speed.${SECRET_DOMAIN}
+          widget:
+            type: speedtest
+            url: http://speed.${SECRET_DOMAIN}
+            bitratePrecision: 3
+  widgets.yaml: |
+    ---
+    - search:
+        provider: [google]
+        focus: false
+        target: _blank
+    - greeting:
+        text_size: xl
+        text: "Howdy!"
+    - kubernetes:
+        cluster:
+          show: true
+          cpu: true
+          memory: true
+          showLabel: true
+          label: "Cluster"
+        nodes:
+          show: true
+          cpu: true
+          memory: true
+          showLabel: true
+    - longhorn:
+        # Show the expanded
+        expanded: true
+        # Shows a node representing the aggregate values
+        total: true
+        # Shows the node names as labels
+        labels: true
+        # Show the nodes
+        nodes: true
+  kubernetes.yaml: |
+    ---
+    mode: cluster
+  docker.yaml: |
+    ---
+  settings.yaml: |
+    ---
+    title: Dashboard
+    favicon: https://kubernetes.io/images/favicon.png
+    theme: dark
+    color: blue
+    target: _self
+    headerStyle: clean
+    layout:
+      News:
+        style: column
+        columns: 2
+      Productivity:
+        style: row
+        columns: 3
+      Networking:
+        style: row
+        columns: 2
+      Media:
+        style: row
+        columns: 3
+      Home:
+        style: row
+        columns: 4
+      Storage:
+        style: row
+        columns: 1
+      Monitoring:
+        style: row
+        columns: 3
+      Downloads:
+        style: row
+        columns: 4
+      Media Automation:
+        style: column
+        columns: 1
+      Security:
+        style: row
+        columns: 2
+    providers:
+      longhorn:
+        url: http://longhorn.${SECRET_DOMAIN}
