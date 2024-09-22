@@ -29,7 +29,6 @@ spec:
       TZ: ${TIMEZONE}
     config:
       widgets:
-        # show the kubernetes widget, with the cluster summary and individual nodes
         - kubernetes:
             cluster:
               show: true
@@ -45,6 +44,10 @@ spec:
         - search:
             provider: duckduckgo
             target: _blank
+        - widget:
+          type: speedtest
+          url: http://speedtest.mzone.ro
+          bitratePrecision: 2
       kubernetes:
         mode: cluster
     serviceAccount:
