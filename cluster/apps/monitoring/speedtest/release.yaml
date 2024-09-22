@@ -30,7 +30,7 @@ spec:
       tag: 0.21.2
     env:
       TZ: "${TIMEZONE}"
-      APP_key: "base64:5lEQnMgzUF0r1xPgEpx1OAGR00v7eRjgffz1i8CNGRg="
+      APP_KEY: "base64:5lEQnMgzUF0r1xPgEpx1OAGR00v7eRjgffz1i8CNGRg="
       APP_URL: "http://localhost"
       DB_CONNECTION: "sqlite"
     resources:
