@@ -87,7 +87,6 @@ data:
     title: Dashboard
     favicon: https://kubernetes.io/images/favicon.png
     theme: dark
-    color: blue
     target: _self
     headerStyle: clean
     layout:
@@ -123,4 +122,4 @@ data:
         columns: 2
     providers:
       longhorn:
-        url: http://longhorn.${SECRET_DOMAIN}
+        url: http://longhorn-frontend.longhorn-system.svc.cluster.local
