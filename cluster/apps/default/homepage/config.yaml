@@ -32,7 +32,7 @@ data:
     ---
     - Storage:
       - Synology:
-        href: http://19
+        href: http://${STORAGE_NAS_IP}
         description: Synology NAS
         icon: si-synology
         widget:
