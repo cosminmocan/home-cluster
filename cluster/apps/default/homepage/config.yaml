@@ -67,7 +67,7 @@ data:
           showLabel: true
     - longhorn:
         # Show the expanded
-        expanded: true
+        expanded: false
         # Shows a node representing the aggregate values
         total: true
         # Shows the node names as labels
