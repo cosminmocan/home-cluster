@@ -33,9 +33,9 @@ spec:
         schedule: "@hourly"
     restartPolicy: OnFailure
     image:
-      repository: alpine/curl
-      tag: "latest"
-    command: ["/bin/bash", "/app/cloudflare-ddns.sh"]
+      repository: bash
+      tag: "alpine3.20"
+    command: ["/usr/local/bin/bash", "/app/cloudflare-ddns.sh"]
     env:
       - name: CLOUDFLARE_EMAIL
         valueFrom:
