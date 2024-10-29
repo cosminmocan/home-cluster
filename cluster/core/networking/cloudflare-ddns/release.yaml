@@ -33,8 +33,8 @@ spec:
         schedule: "@hourly"
     restartPolicy: OnFailure
     image:
-      repository: ghcr.io/onedr0p/alpine
-      tag: 3.19.1
+      repository: alpine
+      tag: 3
     command: ["/bin/bash", "/app/cloudflare-ddns.sh"]
     env:
       - name: CLOUDFLARE_EMAIL
