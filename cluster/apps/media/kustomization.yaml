@@ -10,5 +10,5 @@ resources:
   - jellyfin
   - flaresolverr
   - guacamole
-  - nextology
   - homeassistant
+  - drive
