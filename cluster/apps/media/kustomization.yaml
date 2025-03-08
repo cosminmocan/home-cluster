@@ -12,3 +12,5 @@ resources:
   - guacamole
   - homeassistant
   - drive
+  - photos
+  - music
