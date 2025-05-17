@@ -30,6 +30,4 @@ spec:
       namespace: kube-system
   values:
     installCRDs: true
-    webhook:
-      enabled: true
     replicaCount: 1
