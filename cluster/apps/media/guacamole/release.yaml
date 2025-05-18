@@ -1,4 +1,3 @@
----
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -9,21 +8,11 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 1.5.1
+      version: 4.0.1
       sourceRef:
         kind: HelmRepository
         name: chart-bjw
         namespace: flux-system
-  maxHistory: 3
-  install:
-    remediation:
-      retries: 3
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      retries: 3
-  uninstall:
-    keepHistory: false
   values:
     image:
       repository: docker.io/flcontainers/guacamole
@@ -51,15 +40,14 @@ spec:
           gethomepage.dev/name: Guacamole
           gethomepage.dev/icon: cbi:guacamole
           external-dns.alpha.kubernetes.io/target: "${CLOUDFLARE_DDNS_RECORD}"
-
         hosts:
-          - host: &host remote.${SECRET_DOMAIN}
+          - host: remote.${SECRET_DOMAIN}
             paths:
               - path: /
                 pathType: Prefix
         tls:
           - hosts:
-              - *host
+              - remote.${SECRET_DOMAIN}
     persistence:
       config:
         enabled: true
