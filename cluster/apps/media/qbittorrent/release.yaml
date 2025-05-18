@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 1.5.1
+      version: 4.0.1
       sourceRef:
         kind: HelmRepository
         name: chart-bjw
@@ -25,19 +25,31 @@ spec:
   uninstall:
     keepHistory: false
   values:
-    image:
-      repository: ghcr.io/onedr0p/qbittorrent
-      tag: 5.0.1
     hostname: qbittorrent
-    env:
-      TZ: ${TIMEZONE}
-      QBITTORRENT__PORT: &port 8080
-      QBITTORRENT__BT_PORT: &port-bt 18289
-    service:
+
+    controllers:
+      main:
+        enabled: true
+
+    containers:
+      main:
+        image:
+          repository: ghcr.io/onedr0p/qbittorrent
+          tag: 5.0.3
+        env:
+          - name: TZ
+            value: ${TIMEZONE}
+          - name: QBITTORRENT__PORT
+            value: "8080"
+          - name: QBITTORRENT__BT_PORT
+            value: "18289"
+        resources: {}
+
+    services:
       main:
         ports:
           http:
-            port: *port
+            port: 8080
       bittorrent:
         enabled: true
         type: LoadBalancer
@@ -47,10 +59,11 @@ spec:
         ports:
           bittorrent:
             enabled: true
-            port: *port-bt
+            port: 18289
             protocol: TCP
-            targetPort: *port-bt
+            targetPort: 18289
         externalTrafficPolicy: Local
+
     ingress:
       main:
         enabled: true
@@ -75,18 +88,21 @@ spec:
         tls:
           - hosts:
               - *host
+
     podSecurityContext:
       runAsUser: 1000
       runAsGroup: 1000
       fsGroup: 1000
       fsGroupChangePolicy: "OnRootMismatch"
+
     persistence:
-      config:
-        enabled: true
-        existingClaim: qbitorrent-config
-      downloads:
-        enabled: true
-        mountPath: /downloads
-        path: /volume1/kubeNFS/torrents
-        server: "${STORAGE_NAS_IP}"
-        type: nfs
+      enabled: true
+      items:
+        - name: config
+          type: pvc
+          existingClaim: qbitorrent-config
+        - name: downloads
+          type: nfs
+          mountPath: /downloads
+          path: /volume1/kubeNFS/torrents
+          server: "${STORAGE_NAS_IP}"
