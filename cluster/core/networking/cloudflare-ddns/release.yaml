@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 1.5.1
+      version: 4.0.1
       sourceRef:
         kind: HelmRepository
         name: chart-bjw
@@ -26,41 +26,43 @@ spec:
   uninstall:
     keepHistory: false
   values:
-    controller:
-      type: cronjob
+    controllers:
       cronjob:
-        concurrencyPolicy: Forbid
+        enabled: true
         schedule: "@hourly"
+        concurrencyPolicy: Forbid
     restartPolicy: OnFailure
-    image:
-      repository: bash
-      tag: "alpine3.20"
-    command: ["/usr/local/bin/bash", "/app/cloudflare-ddns.sh"]
-    env:
-      - name: CLOUDFLARE_EMAIL
-        valueFrom:
-          secretKeyRef:
-            name: cluster-secrets
-            key: SECRET_CLOUDFLARE_EMAIL
-      - name: CLOUDFLARE_APIKEY
-        valueFrom:
-          secretKeyRef:
-            name: cluster-secrets
-            key: CLOUDFLARE_APIKEY
-      - name: CLOUDFLARE_RECORD_NAME
-        valueFrom:
-          secretKeyRef:
-            name: cluster-secrets
-            key: CLOUDFLARE_DDNS_RECORD
-    service:
+    containers:
+      main:
+        image:
+          repository: bash
+          tag: "alpine3.20"
+        command: ["/usr/local/bin/bash", "/app/cloudflare-ddns.sh"]
+        env:
+          - name: CLOUDFLARE_EMAIL
+            valueFrom:
+              secretKeyRef:
+                name: cluster-secrets
+                key: SECRET_CLOUDFLARE_EMAIL
+          - name: CLOUDFLARE_APIKEY
+            valueFrom:
+              secretKeyRef:
+                name: cluster-secrets
+                key: CLOUDFLARE_APIKEY
+          - name: CLOUDFLARE_RECORD_NAME
+            valueFrom:
+              secretKeyRef:
+                name: cluster-secrets
+                key: CLOUDFLARE_DDNS_RECORD
+    services:
       main:
         enabled: false
     persistence:
-      config:
-        enabled: true
-        type: configMap
-        name: cloudflare-ddns-configmap
-        subPath: cloudflare-ddns.sh
-        mountPath: /app/cloudflare-ddns.sh
-        defaultMode: 0775
-        readOnly: true
+      enabled: true
+      items:
+        - type: configMap
+          name: cloudflare-ddns-configmap
+          subPath: cloudflare-ddns.sh
+          mountPath: /app/cloudflare-ddns.sh
+          defaultMode: 0775
+          readOnly: true
