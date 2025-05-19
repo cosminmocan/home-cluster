@@ -34,7 +34,6 @@ spec:
 
     service:
       main:
-        controller: guacamole  # Explicitly bind the service to the controller
         ports:
           http:
             port: 8080
