@@ -34,8 +34,8 @@ spec:
     ingress:
       main:
         enabled: true
-        ingressClassName: nginx
         annotations:
+          kubernetes.io/ingress.class: nginx
           gethomepage.dev/enabled: "true"
           gethomepage.dev/name: Guacamole
           gethomepage.dev/icon: cbi:guacamole
@@ -52,4 +52,6 @@ spec:
       config:
         enabled: true
         existingClaim: guacamole-config
+    mounts:
+      config:
         mountPath: /config
