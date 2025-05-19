@@ -1,11 +1,12 @@
 ---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: guacamole
+  name: &app guacamole
   namespace: media
 spec:
-  interval: 15m
+  interval: 30m
   chart:
     spec:
       chart: app-template
@@ -14,69 +15,60 @@ spec:
         kind: HelmRepository
         name: chart-bjw
         namespace: flux-system
-  maxHistory: 3
+  maxHistory: 2
   install:
     remediation:
       retries: 3
   upgrade:
     cleanupOnFail: true
     remediation:
+      strategy: rollback
       retries: 3
   uninstall:
     keepHistory: false
   values:
-    controller:
-      main:
-        enabled: true
-        type: deployment
-
-    image:
-      repository: docker.io/flcontainers/guacamole
-      tag: 1.5.5
-
-    env:
-      TZ: "${TIMEZONE}"
-      EXTENSIONS: auth-sso-openid
-
-    resources:
-      requests:
-        cpu: 200m
-        memory: 200Mi
-      limits:
-        memory: 500Mi
-
+    controllers:
+      guacamole:
+        containers:
+          app:
+            image:
+              repository: docker.io/flcontainers/guacamole
+              tag: 1.5.5
+            env:
+              TZ: "${TIMEZONE}"
+              EXTENSIONS: auth-sso-openid
+            resources:
+              requests:
+                cpu: 200m
+                memory: 200Mi
+              limits:
+                memory: 500Mi
     service:
-      main:
-        controller: main     
-        ports:
-          http:
-            port: 8080
-
-    ingress:
-      main:
-        enabled: true
+      app:
+        controller: guacamole
         annotations:
-          kubernetes.io/ingress.class: nginx 
           gethomepage.dev/enabled: "true"
           gethomepage.dev/name: Guacamole
           gethomepage.dev/icon: cbi:guacamole
           external-dns.alpha.kubernetes.io/target: "${CLOUDFLARE_DDNS_RECORD}"
-
+        labels:
+          teleport: enabled
+        ports:
+          http:
+            port: 8080
+    ingress:
+      guacamole:
+        className: external
         hosts:
           - host: &host remote.${SECRET_DOMAIN}
             paths:
               - path: /
                 pathType: Prefix
-
         tls:
           - hosts:
               - *host
-
     persistence:
       config:
-        enabled: true
         existingClaim: guacamole-config
-
-    mounts:
-      config:
-        mountPath: /config   
+        globalMounts:
+          - path: /config
