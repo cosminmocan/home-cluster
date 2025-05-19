@@ -58,7 +58,7 @@ spec:
             port: 8080
     ingress:
       guacamole:
-        className: external
+        className: nginx
         hosts:
           - host: &host remote.${SECRET_DOMAIN}
             paths:
