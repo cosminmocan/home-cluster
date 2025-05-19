@@ -1,3 +1,4 @@
+---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -13,9 +14,21 @@ spec:
         kind: HelmRepository
         name: chart-bjw
         namespace: flux-system
+  maxHistory: 3
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
   values:
     controller:
-      type: deployment
+      main:
+        enabled: true
+        type: deployment
 
     image:
       repository: docker.io/flcontainers/guacamole
@@ -34,7 +47,7 @@ spec:
 
     service:
       main:
-        controller: main
+        controller: main     
         ports:
           http:
             port: 8080
@@ -43,19 +56,21 @@ spec:
       main:
         enabled: true
         annotations:
-          kubernetes.io/ingress.class: nginx
+          kubernetes.io/ingress.class: nginx 
           gethomepage.dev/enabled: "true"
           gethomepage.dev/name: Guacamole
           gethomepage.dev/icon: cbi:guacamole
           external-dns.alpha.kubernetes.io/target: "${CLOUDFLARE_DDNS_RECORD}"
+
         hosts:
-          - host: remote.${SECRET_DOMAIN}
+          - host: &host remote.${SECRET_DOMAIN}
             paths:
               - path: /
                 pathType: Prefix
+
         tls:
           - hosts:
-              - remote.${SECRET_DOMAIN}
+              - *host
 
     persistence:
       config:
@@ -64,4 +79,4 @@ spec:
 
     mounts:
       config:
-        mountPath: /config
+        mountPath: /config   
