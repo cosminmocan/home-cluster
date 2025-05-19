@@ -16,23 +16,29 @@ spec:
   values:
     controller:
       type: deployment
+
     image:
       repository: docker.io/flcontainers/guacamole
       tag: 1.5.5
+
     env:
       TZ: "${TIMEZONE}"
       EXTENSIONS: auth-sso-openid
+
     resources:
       requests:
         cpu: 200m
         memory: 200Mi
       limits:
         memory: 500Mi
+
     service:
       main:
+        controller: guacamole  # Explicitly bind the service to the controller
         ports:
           http:
             port: 8080
+
     ingress:
       main:
         enabled: true
@@ -50,10 +56,12 @@ spec:
         tls:
           - hosts:
               - remote.${SECRET_DOMAIN}
+
     persistence:
       config:
         enabled: true
         existingClaim: guacamole-config
+
     mounts:
       config:
         mountPath: /config
