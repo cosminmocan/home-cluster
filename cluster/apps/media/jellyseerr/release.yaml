@@ -60,6 +60,7 @@ spec:
 
     ingress:
       jellyseerr:
+        enabled: true  # ✅ Ensures ingress is deployed
         className: nginx
         annotations:
           gethomepage.dev/enabled: "true"
