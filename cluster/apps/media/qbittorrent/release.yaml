@@ -45,6 +45,7 @@ spec:
               TZ: ${TIMEZONE}
               QBITTORRENT__PORT: &port 8080
               QBITTORRENT__BT_PORT: &port-bt 18289
+    
     service:
       qbittorrent:
         controller: qbittorrent
@@ -64,11 +65,10 @@ spec:
             protocol: TCP
             targetPort: *port-bt
         externalTrafficPolicy: Local
+    
     ingress:
       qbittorrent:
         className: nginx
-        service:
-          name: qbittorrent  # 🔥 This is the key that makes it work!
         annotations:
           gethomepage.dev/enabled: "true"
           gethomepage.dev/name: qBitTorrent
@@ -86,12 +86,16 @@ spec:
             paths:
               - path: /
                 pathType: Prefix
+                service:
+                  identifier: qbittorrent
+                  port: http
         tls:
           - hosts:
               - *host
+    
     persistence:
       config:
-        existingClaim: qbitorrent-config
+        existingClaim: qbittorrent-config
         globalMounts:
           - path: /config
       downloads:
