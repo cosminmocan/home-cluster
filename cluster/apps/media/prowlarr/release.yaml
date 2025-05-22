@@ -1,8 +1,9 @@
 ---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: prowlarr
+  name: &app prowlarr
   namespace: media
 spec:
   interval: 15m
@@ -14,63 +15,64 @@ spec:
         kind: HelmRepository
         name: chart-bjw
         namespace: flux-system
+  maxHistory: 2
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  uninstall:
+    keepHistory: false
   values:
-    hostname: prowlarr
-
     controllers:
-      main:
-        enabled: true
-
-    containers:
-      main:
-        image:
-          repository: ghcr.io/onedr0p/prowlarr-develop
-          tag: 1.13.0.4217
-        env:
-          - name: TZ
-            value: ${TIMEZONE}
-          - name: PROWLARR__LOG_LEVEL
-            value: info
-          - name: PROWLARR__BRANCH
-            value: develop
-          - name: PROWLARR__APPLICATION_URL
-            value: "https://prowlarr.${SECRET_DOMAIN}"
-          - name: PROWLARR__POSTGRES_HOST
-            value: "${POSTGRES_HOST_ADDRESS}"
-          - name: PROWLARR__POSTGRES_MAIN_DB
-            value: prowlarr-main
-          - name: PROWLARR__POSTGRES_LOG_DB
-            value: prowlarr-log
-          - name: PROWLARR__POSTGRES_USER
-            value: "postgres"
-          - name: PROWLARR__POSTGRES_PASSWORD
-            value: "${SECRET_POSTGRES_ADMIN_PASS}"
-          - name: PROWLARR__PORT
-            value: "9696"
-          - name: PROWLARR__API_KEY
-            value: "${PROWLARR_SECRET_KEY}"
-        resources:
-          requests:
-            memory: 130Mi
-            cpu: 15m
-          limits:
-            memory: 800Mi
-            cpu: 500m
-
-    services:
-      main:
-        ports:
-          http:
-            port: 9696
-
-    ingress:
-      main:
-        enabled: true
-        ingressClassName: nginx
+      prowlarr:
+        pod:
+          hostname: prowlarr
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            fsGroup: 1000
+            fsGroupChangePolicy: "OnRootMismatch"
+        containers:
+          app:
+            image:
+              repository: ghcr.io/onedr0p/prowlarr-develop
+              tag: 1.13.0.4217
+            env:
+              TZ: ${TIMEZONE}
+              PROWLARR__LOG_LEVEL: info
+              PROWLARR__BRANCH: develop
+              PROWLARR__APPLICATION_URL: "https://prowlarr.${SECRET_DOMAIN}"
+              PROWLARR__POSTGRES_HOST: "${POSTGRES_HOST_ADDRESS}"
+              PROWLARR__POSTGRES_MAIN_DB: prowlarr-main
+              PROWLARR__POSTGRES_LOG_DB: prowlarr-log
+              PROWLARR__POSTGRES_USER: "postgres"
+              PROWLARR__POSTGRES_PASSWORD: "${SECRET_POSTGRES_ADMIN_PASS}"
+              PROWLARR__PORT: &port 9696
+              PROWLARR__API_KEY: "${PROWLARR_SECRET_KEY}"
+            resources:
+              requests:
+                cpu: 15m
+                memory: 130Mi
+              limits:
+                cpu: 500m
+                memory: 800Mi
+    service:
+      app:
+        controller: prowlarr
         annotations:
           gethomepage.dev/enabled: "true"
           gethomepage.dev/name: Prowlarr
           gethomepage.dev/icon: mdi-cat
+        ports:
+          http:
+            port: *port
+    ingress:
+      prowlarr:
+        className: nginx
         hosts:
           - host: &host "prowlarr.${SECRET_DOMAIN}"
             paths:
@@ -79,16 +81,8 @@ spec:
         tls:
           - hosts:
               - *host
-
-    podSecurityContext:
-      runAsUser: 1000
-      runAsGroup: 1000
-      fsGroup: 1000
-      fsGroupChangePolicy: "OnRootMismatch"
-
     persistence:
-      enabled: true
-      items:
-        - name: config
-          type: pvc
-          existingClaim: prowlarr-config-v2
+      config:
+        existingClaim: prowlarr-config-v2
+        globalMounts:
+          - path: /config
