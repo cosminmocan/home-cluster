@@ -50,28 +50,34 @@ spec:
               limits:
                 cpu: 800m
                 memory: 800Mi
+
     service:
-      app:
+      jellyseerr:
         controller: jellyseerr
+        ports:
+          http:
+            port: 5055
+
+    ingress:
+      jellyseerr:
+        className: nginx
         annotations:
           gethomepage.dev/enabled: "true"
           gethomepage.dev/name: Jellyseerr
           gethomepage.dev/icon: mdi-jellyfish-outline
           external-dns.alpha.kubernetes.io/target: "${CLOUDFLARE_DDNS_RECORD}"
-        ports:
-          http:
-            port: 5055
-    ingress:
-      jellyseerr:
-        className: nginx
         hosts:
-          - host: &host jellyseerr.${SECRET_DOMAIN}
+          - host: &host "jellyseerr.${SECRET_DOMAIN}"
             paths:
               - path: /
                 pathType: Prefix
+                service:
+                  identifier: jellyseerr
+                  port: http
         tls:
           - hosts:
               - *host
+
     persistence:
       config:
         existingClaim: jellyseerr-config
