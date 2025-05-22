@@ -41,29 +41,29 @@ spec:
             image:
               repository: bash
               tag: alpine3.20
-            command: ["/usr/local/bin/bash", "/app/cloudflare-ddns.sh"]
+            command: ["/bin/bash", "/app/cloudflare-ddns.sh"]
             env:
-              - name: CLOUDFLARE_EMAIL
+              CLOUDFLARE_EMAIL:
                 valueFrom:
                   secretKeyRef:
                     name: cluster-secrets
                     key: SECRET_CLOUDFLARE_EMAIL
-              - name: CLOUDFLARE_APIKEY
+              CLOUDFLARE_APIKEY:
                 valueFrom:
                   secretKeyRef:
                     name: cluster-secrets
                     key: CLOUDFLARE_APIKEY
-              - name: CLOUDFLARE_RECORD_NAME
+              CLOUDFLARE_RECORD_NAME:
                 valueFrom:
                   secretKeyRef:
                     name: cluster-secrets
                     key: CLOUDFLARE_DDNS_RECORD
+    
     persistence:
       config:
         type: configMap
         name: cloudflare-ddns-configmap
         defaultMode: 0775
-        readOnly: true
         globalMounts:
           - path: /app/cloudflare-ddns.sh
             subPath: cloudflare-ddns.sh
