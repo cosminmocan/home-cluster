@@ -67,7 +67,7 @@ spec:
     ingress:
       qbittorrent:
         className: nginx
-        controller: qbittorrent  # ✅ Correct way to bind ingress to service
+        controller: qbittorrent
         annotations:
           gethomepage.dev/enabled: "true"
           gethomepage.dev/name: qBitTorrent
