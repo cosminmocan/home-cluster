@@ -41,7 +41,7 @@ spec:
               repository: ghcr.io/onedr0p/radarr
               tag: 5.2.6.8376
             env:
-              TZ: "${TIMEZONE}"
+              TZ: ${TIMEZONE}
               RADARR__LOG_LEVEL: info
               RADARR__BRANCH: master
               RADARR__APPLICATION_URL: "https://radarr.${SECRET_DOMAIN}"
@@ -61,15 +61,16 @@ spec:
     service:
       app:
         controller: radarr
+        annotations:
+          gethomepage.dev/enabled: "true"
+          gethomepage.dev/name: radarr
+          gethomepage.dev/icon: filmstrip
         ports:
           http:
             port: 7878
     ingress:
       radarr:
         className: nginx
-        annotations:
-          hajimari.io/appName: radarr
-          hajimari.io/icon: filmstrip
         hosts:
           - host: &host "radarr.${SECRET_DOMAIN}"
             paths:
