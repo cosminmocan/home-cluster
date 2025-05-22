@@ -46,7 +46,7 @@ spec:
               QBITTORRENT__PORT: &port 8080
               QBITTORRENT__BT_PORT: &port-bt 18289
     service:
-      app:
+      qbittorrent:
         controller: qbittorrent
         ports:
           http:
@@ -65,7 +65,7 @@ spec:
             targetPort: *port-bt
         externalTrafficPolicy: Local
     ingress:
-      app:  # 🔥 MUST match the name of the service ("app")
+      qbittorrent:  # ✅ Matches service name exactly
         className: nginx
         annotations:
           gethomepage.dev/enabled: "true"
