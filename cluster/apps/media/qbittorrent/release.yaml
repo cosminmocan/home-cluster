@@ -67,6 +67,8 @@ spec:
     ingress:
       qbittorrent:
         className: nginx
+        service:
+          name: app  # ✅ This is the required fix
         annotations:
           gethomepage.dev/enabled: "true"
           gethomepage.dev/name: qBitTorrent
