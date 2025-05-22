@@ -67,7 +67,6 @@ spec:
     ingress:
       qbittorrent:
         className: nginx
-        controller: qbittorrent
         annotations:
           gethomepage.dev/enabled: "true"
           gethomepage.dev/name: qBitTorrent
