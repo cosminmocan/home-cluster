@@ -1,8 +1,9 @@
 ---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: qbittorrent
+  name: &app qbittorrent
   namespace: media
 spec:
   interval: 15m
@@ -21,37 +22,37 @@ spec:
   upgrade:
     cleanupOnFail: true
     remediation:
+      strategy: rollback
       retries: 3
   uninstall:
     keepHistory: false
   values:
-    hostname: qbittorrent
-
     controllers:
-      main:
-        enabled: true
-
-    containers:
-      main:
-        image:
-          repository: ghcr.io/onedr0p/qbittorrent
-          tag: 5.0.3
-        env:
-          - name: TZ
-            value: ${TIMEZONE}
-          - name: QBITTORRENT__PORT
-            value: "8080"
-          - name: QBITTORRENT__BT_PORT
-            value: "18289"
-        resources: {}
-
-    services:
-      main:
+      qbittorrent:
+        pod:
+          hostname: qbittorrent
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            fsGroup: 1000
+            fsGroupChangePolicy: "OnRootMismatch"
+        containers:
+          app:
+            image:
+              repository: ghcr.io/onedr0p/qbittorrent
+              tag: 5.0.1
+            env:
+              TZ: ${TIMEZONE}
+              QBITTORRENT__PORT: &port 8080
+              QBITTORRENT__BT_PORT: &port-bt 18289
+    service:
+      app:
+        controller: qbittorrent
         ports:
           http:
-            port: 8080
+            port: *port
       bittorrent:
-        enabled: true
+        controller: qbittorrent
         type: LoadBalancer
         annotations:
           io.cilium/lb-ipam-ips: "${QBITTORRENT_IP}"
@@ -59,15 +60,13 @@ spec:
         ports:
           bittorrent:
             enabled: true
-            port: 18289
+            port: *port-bt
             protocol: TCP
-            targetPort: 18289
+            targetPort: *port-bt
         externalTrafficPolicy: Local
-
     ingress:
-      main:
-        enabled: true
-        ingressClassName: nginx
+      qbittorrent:
+        className: nginx
         annotations:
           gethomepage.dev/enabled: "true"
           gethomepage.dev/name: qBitTorrent
@@ -88,21 +87,14 @@ spec:
         tls:
           - hosts:
               - *host
-
-    podSecurityContext:
-      runAsUser: 1000
-      runAsGroup: 1000
-      fsGroup: 1000
-      fsGroupChangePolicy: "OnRootMismatch"
-
     persistence:
-      enabled: true
-      items:
-        - name: config
-          type: pvc
-          existingClaim: qbitorrent-config
-        - name: downloads
-          type: nfs
-          mountPath: /downloads
-          path: /volume1/kubeNFS/torrents
-          server: "${STORAGE_NAS_IP}"
+      config:
+        existingClaim: qbitorrent-config
+        globalMounts:
+          - path: /config
+      downloads:
+        type: nfs
+        server: "${STORAGE_NAS_IP}"
+        path: /volume1/kubeNFS/torrents
+        globalMounts:
+          - path: /downloads
