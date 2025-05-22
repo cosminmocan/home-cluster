@@ -67,8 +67,6 @@ spec:
     ingress:
       qbittorrent:
         className: nginx
-        service:
-          name: app
         annotations:
           gethomepage.dev/enabled: "true"
           gethomepage.dev/name: qBitTorrent
@@ -86,6 +84,8 @@ spec:
             paths:
               - path: /
                 pathType: Prefix
+                serviceName: app
+                servicePort: http
         tls:
           - hosts:
               - *host
