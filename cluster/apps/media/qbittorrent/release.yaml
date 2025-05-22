@@ -65,10 +65,8 @@ spec:
             targetPort: *port-bt
         externalTrafficPolicy: Local
     ingress:
-      qbittorrent:
+      app:  # 🔥 MUST match the name of the service ("app")
         className: nginx
-        service:
-          name: app  # ✅ This is the required fix
         annotations:
           gethomepage.dev/enabled: "true"
           gethomepage.dev/name: qBitTorrent
