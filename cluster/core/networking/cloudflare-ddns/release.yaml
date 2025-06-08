@@ -39,8 +39,8 @@ spec:
         containers:
           app:
             image:
-              repository: bash
-              tag: alpine3.20
+              repository: alpine/curl
+              tag: "latest"
             command: ["/bin/bash", "/app/cloudflare-ddns.sh"]
             env:
               CLOUDFLARE_EMAIL:
