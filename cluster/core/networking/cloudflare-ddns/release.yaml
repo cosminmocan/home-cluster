@@ -41,7 +41,7 @@ spec:
             image:
               repository: alpine/curl
               tag: "latest"
-            command: ["/bin/bash", "/app/cloudflare-ddns.sh"]
+            command: ["/bin/sh", "/app/cloudflare-ddns.sh"]
             env:
               CLOUDFLARE_EMAIL:
                 valueFrom:
