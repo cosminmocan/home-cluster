@@ -49,8 +49,8 @@ spec:
       meshcentral:
         controller: meshcentral
         ports:
-          http:
-            port: 80
+          https:
+            port: 443
 
     ingress:
       meshcentral:
@@ -68,7 +68,7 @@ spec:
                 pathType: Prefix
                 service:
                   identifier: meshcentral
-                  port: http
+                  port: https
         tls:
           - hosts:
               - *host
@@ -78,8 +78,8 @@ spec:
         type: configMap
         name: meshcentral-config
         advancedMounts:
-          *app :
-            *app :
+          meshcentral :
+            meshcentral :
               - path: /opt/meshcentral/meshcentral-data/config.json
                 subPath: config.json
       data:
