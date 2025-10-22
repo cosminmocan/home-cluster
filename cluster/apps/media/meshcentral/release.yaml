@@ -29,12 +29,6 @@ spec:
   values:
     controllers:
       meshcentral:
-        pod:
-          securityContext:
-            runAsUser: 1000
-            runAsGroup: 1000
-            fsGroup: 1000
-            fsGroupChangePolicy: "OnRootMismatch"
         containers:
           app:
             image:
@@ -81,7 +75,15 @@ spec:
 
     persistence:
       config:
-        existingClaim: meshcentral-config
+        type: configMap
+        name: meshcentral-config
+        advancedMounts:
+          *app :
+            *app :
+              - path: /opt/meshcentral/meshcentral-data/config.json
+                subPath: config.json
+      data:
+        existingClaim: meshcentral-data
         globalMounts:
           - path: /root
             subPath: rootdir
