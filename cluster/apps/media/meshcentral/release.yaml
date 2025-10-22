@@ -49,7 +49,7 @@ spec:
       meshcentral:
         controller: meshcentral
         ports:
-          http:
+          https:
             port: 8080
 
     ingress:
@@ -68,7 +68,7 @@ spec:
                 pathType: Prefix
                 service:
                   identifier: meshcentral
-                  port: http
+                  port: https
         tls:
           - hosts:
               - *host
