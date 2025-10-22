@@ -78,8 +78,8 @@ spec:
         type: configMap
         name: meshcentral-config
         advancedMounts:
-          meshcentral :
-            meshcentral :
+          meshcentral:
+            meshcentral:
               - path: /opt/meshcentral/meshcentral-data/config.json
                 subPath: config.json
       data:
