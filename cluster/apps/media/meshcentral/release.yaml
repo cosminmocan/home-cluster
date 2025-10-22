@@ -31,10 +31,6 @@ spec:
       meshcentral:
         pod:
           securityContext:
-            runAsUser: 1000
-            runAsGroup: 1000
-            fsGroup: 1000
-            fsGroupChangePolicy: "OnRootMismatch"
         containers:
           app:
             image:
@@ -56,7 +52,7 @@ spec:
         controller: meshcentral
         ports:
           http:
-            port: 443
+            port: 80
 
     ingress:
       meshcentral:
@@ -66,7 +62,7 @@ spec:
           gethomepage.dev/enabled: "true"
           gethomepage.dev/name: meshcentral
           gethomepage.dev/icon: mdi-jellyfish-outline
-          external-dns.alpha.kubernetes.io/target: "${CLOUDFLARE_DDNS_RECORD}"
+          #external-dns.alpha.kubernetes.io/target: "${CLOUDFLARE_DDNS_RECORD}"
         hosts:
           - host: &host "meshcentral.${SECRET_DOMAIN}"
             paths:
