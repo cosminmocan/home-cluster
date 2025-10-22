@@ -43,7 +43,7 @@ spec:
             env:
               TZ: ${TIMEZONE}
               NODE_ENV: production
-              HOSTNAME: &host "meshcentral.${SECRET_DOMAIN}"
+              HOSTNAME: "https://meshcentral.${SECRET_DOMAIN}"
               ALLOW_NEW_ACCOUNTS: "false"
             resources:
               requests:
@@ -56,7 +56,7 @@ spec:
         controller: meshcentral
         ports:
           http:
-            port: 8080
+            port: 443
 
     ingress:
       meshcentral:
