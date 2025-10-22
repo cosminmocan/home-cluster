@@ -50,7 +50,7 @@ spec:
         controller: meshcentral
         ports:
           http:
-            port: 80
+            port: 8080
 
     ingress:
       meshcentral:
@@ -60,7 +60,7 @@ spec:
           gethomepage.dev/enabled: "true"
           gethomepage.dev/name: meshcentral
           gethomepage.dev/icon: mdi-jellyfish-outline
-          #external-dns.alpha.kubernetes.io/target: "${CLOUDFLARE_DDNS_RECORD}"
+          external-dns.alpha.kubernetes.io/target: "${CLOUDFLARE_DDNS_RECORD}"
         hosts:
           - host: &host "meshcentral.${SECRET_DOMAIN}"
             paths:
