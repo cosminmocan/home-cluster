@@ -4,3 +4,4 @@ kind: Kustomization
 resources:
   - pvc.yaml
   - release.yaml
+  - configmap.yaml
