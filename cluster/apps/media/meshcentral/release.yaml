@@ -1,0 +1,93 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app meshcentral
+  namespace: media
+spec:
+  interval: 15m
+  chart:
+    spec:
+      chart: app-template
+      version: 4.0.1
+      sourceRef:
+        kind: HelmRepository
+        name: chart-bjw
+        namespace: flux-system
+  maxHistory: 2
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    controllers:
+      meshcentral:
+        pod:
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            fsGroup: 1000
+            fsGroupChangePolicy: "OnRootMismatch"
+        containers:
+          app:
+            image:
+              repository: ghcr.io/ylianst/meshcentral
+              tag: 1.1.51
+            env:
+              TZ: ${TIMEZONE}
+              NODE_ENV: production
+              HOSTNAME: &host "meshcentral.${SECRET_DOMAIN}"
+              ALLOW_NEW_ACCOUNTS: "false"
+            resources:
+              requests:
+                cpu: 100m
+              limits:
+                memory: 2Gi
+
+    service:
+      meshcentral:
+        controller: meshcentral
+        ports:
+          http:
+            port: 8080
+
+    ingress:
+      meshcentral:
+        enabled: true  # ✅ Ensures ingress is deployed
+        className: nginx
+        annotations:
+          gethomepage.dev/enabled: "true"
+          gethomepage.dev/name: meshcentral
+          gethomepage.dev/icon: mdi-jellyfish-outline
+          #external-dns.alpha.kubernetes.io/target: "${CLOUDFLARE_DDNS_RECORD}"
+        hosts:
+          - host: &host "meshcentral.${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                pathType: Prefix
+                service:
+                  identifier: meshcentral
+                  port: http
+        tls:
+          - hosts:
+              - *host
+
+    persistence:
+      config:
+        existingClaim: meshcentral-config
+        globalMounts:
+          - path: /root
+            subPath: rootdir
+          - path: /opt/meshcentral/meshcentral-data
+            subPath: data
+          - path: /opt/meshcentral/meshcentral-files
+            subPath: userfiles
+          - path: /opt/meshcentral/meshcentral-backups
+            subPath: backups
