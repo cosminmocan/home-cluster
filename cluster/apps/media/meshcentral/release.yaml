@@ -52,7 +52,7 @@ spec:
         controller: meshcentral
         ports:
           http:
-            port: 8080
+            port: 443
 
     ingress:
       meshcentral:
