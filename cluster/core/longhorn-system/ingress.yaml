@@ -9,7 +9,7 @@ metadata:
     gethomepage.dev/name: Longhorn
     gethomepage.dev/icon: mdi-harddisk
 spec:
-  ingressClassName: nginx
+  ingressClassName: traefik
   rules:
     - host: &host longhorn.${SECRET_DOMAIN}
       http:
