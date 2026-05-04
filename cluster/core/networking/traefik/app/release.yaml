@@ -46,6 +46,7 @@ spec:
       kubernetesIngress:
         enabled: true
         allowExternalNameServices: true
+        nativeLBByDefault: true
         publishedService:
           enabled: true
 
