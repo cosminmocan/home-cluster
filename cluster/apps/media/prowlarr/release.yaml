@@ -72,7 +72,7 @@ spec:
             port: *port
     ingress:
       prowlarr:
-        className: nginx
+        className: traefik
         hosts:
           - host: &host "prowlarr.${SECRET_DOMAIN}"
             paths:
