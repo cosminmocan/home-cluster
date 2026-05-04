@@ -61,7 +61,7 @@ spec:
     ingress:
       jellyseerr:
         enabled: true  # ✅ Ensures ingress is deployed
-        className: nginx
+        className: traefik
         annotations:
           gethomepage.dev/enabled: "true"
           gethomepage.dev/name: Jellyseerr
