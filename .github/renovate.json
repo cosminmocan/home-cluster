@@ -1,7 +1,7 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:base",
+    "config:recommended",
     ":disableRateLimiting",
     "github>cosminmocan/home-cluster//.github/renovate/autoMerge.json",
     "github>cosminmocan/home-cluster//.github/renovate/labels.json"
@@ -12,32 +12,38 @@
   "minimumReleaseAge": "30 days",
   "dependencyDashboard": true,
   "dependencyDashboardTitle": "[Renovate 🤖] Dependency Dashboard",
-  "python": {
-    "enabled": false
-  },
   "ansible-galaxy": {
     "enabled": false
   },
   "flux": {
-    "fileMatch": ["cluster/.+\\.ya?ml$"]
+    "managerFilePatterns": [
+      "/cluster/.+\\.ya?ml$/"
+    ]
   },
   "helm-values": {
-    "fileMatch": ["cluster/.+\\.ya?ml$"]
+    "managerFilePatterns": [
+      "/cluster/.+\\.ya?ml$/"
+    ]
   },
   "kubernetes": {
-    "fileMatch": ["cluster/.+\\.ya?ml$"]
+    "managerFilePatterns": [
+      "/cluster/.+\\.ya?ml$/"
+    ]
   },
-  "regexManagers": [
+  "customManagers": [
     {
+      "customType": "regex",
       "description": "Dependencies from comments",
-      "fileMatch": [
-        "cluster/.+\\.ya?ml$"
-      ],
-      "matchStrings": [
-        "datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)( versioning=(?<versioning>\\S+))?\n.*?\"(?<currentValue>.*)\"\n"
-      ],
+      "managerFilePatterns": ["/cluster/.+\\.ya?ml$/"],
+      "matchStrings": ["datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)( versioning=(?<versioning>\\S+))?\n.*?\"(?<currentValue>.*)\"\n"],
       "datasourceTemplate": "{{#if datasource}}{{{datasource}}}{{else}}github-releases{{/if}}",
       "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
+    }
+  ],
+  "packageRules": [
+    {
+      "matchCategories": ["python"],
+      "enabled": false
     }
   ]
 }
