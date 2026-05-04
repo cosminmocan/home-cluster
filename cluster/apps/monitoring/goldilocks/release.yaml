@@ -36,7 +36,7 @@ spec:
       replicaCount: 1
       ingress:
         enabled: true
-        ingressClassName: nginx
+        ingressClassName: traefik
         annotations:
           gethomepage.dev/enabled: "true"
           gethomepage.dev/name: Goldilocks
