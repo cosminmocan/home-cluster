@@ -1,56 +1,64 @@
 ---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: guacamole
+  name: &app guacamole
   namespace: media
 spec:
-  interval: 15m
+  interval: 30m
   chart:
     spec:
       chart: app-template
-      version: 1.5.1
+      version: 4.0.1
       sourceRef:
         kind: HelmRepository
         name: chart-bjw
         namespace: flux-system
-  maxHistory: 3
+  maxHistory: 2
   install:
     remediation:
       retries: 3
   upgrade:
     cleanupOnFail: true
     remediation:
+      strategy: rollback
       retries: 3
   uninstall:
     keepHistory: false
   values:
-    image:
-      repository: docker.io/flcontainers/guacamole
-      tag: 1.5.5
-    env:
-      TZ: "${TIMEZONE}"
-      EXTENSIONS: auth-sso-openid
-    resources:
-      requests:
-        cpu: 200m
-        memory: 200Mi
-      limits:
-        memory: 500Mi
+    controllers:
+      guacamole:
+        containers:
+          app:
+            image:
+              repository: docker.io/flcontainers/guacamole
+              tag: 1.5.5
+            env:
+              TZ: "${TIMEZONE}"
+              EXTENSIONS: auth-sso-openid
+            resources:
+              requests:
+                cpu: 200m
+                memory: 200Mi
+              limits:
+                memory: 500Mi
     service:
-      main:
+      app:
+        controller: guacamole
+        annotations:
+          gethomepage.dev/enabled: "true"
+          gethomepage.dev/name: Guacamole
+          gethomepage.dev/icon: cbi:guacamole
+          external-dns.alpha.kubernetes.io/target: "${CLOUDFLARE_DDNS_RECORD}"
+        labels:
+          teleport: enabled
         ports:
           http:
             port: 8080
     ingress:
-      main:
-        enabled: true
-        ingressClassName: nginx
-        annotations:
-          hajimari.io/appName: Guacamole
-          hajimari.io/icon: cbi:guacamole
-          external-dns.alpha.kubernetes.io/target: "${CLOUDFLARE_DDNS_RECORD}"
-
+      guacamole:
+        className: nginx
         hosts:
           - host: &host remote.${SECRET_DOMAIN}
             paths:
@@ -61,7 +69,6 @@ spec:
               - *host
     persistence:
       config:
-        enabled: true
         existingClaim: guacamole-config
-        mountPath: /config
-
+        globalMounts:
+          - path: /config

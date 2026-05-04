@@ -1,15 +1,16 @@
 ---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: cloudflare-ddns
+  name: &app cloudflare-ddns
   namespace: networking
 spec:
   interval: 15m
   chart:
     spec:
       chart: app-template
-      version: 1.5.1
+      version: 4.0.1
       sourceRef:
         kind: HelmRepository
         name: chart-bjw
@@ -22,45 +23,47 @@ spec:
   upgrade:
     cleanupOnFail: true
     remediation:
+      strategy: rollback
       retries: 3
   uninstall:
     keepHistory: false
   values:
-    controller:
-      type: cronjob
-      cronjob:
-        concurrencyPolicy: Forbid
-        schedule: "@hourly"
-    restartPolicy: OnFailure
-    image:
-      repository: ghcr.io/onedr0p/alpine
-      tag: 3.19.1
-    command: ["/bin/bash", "/app/cloudflare-ddns.sh"]
-    env:
-      - name: CLOUDFLARE_EMAIL
-        valueFrom:
-          secretKeyRef:
-            name: cluster-secrets
-            key: SECRET_CLOUDFLARE_EMAIL
-      - name: CLOUDFLARE_APIKEY
-        valueFrom:
-          secretKeyRef:
-            name: cluster-secrets
-            key: CLOUDFLARE_APIKEY
-      - name: CLOUDFLARE_RECORD_NAME
-        valueFrom:
-          secretKeyRef:
-            name: cluster-secrets
-            key: CLOUDFLARE_DDNS_RECORD
-    service:
-      main:
-        enabled: false
+    controllers:
+      cloudflare-ddns:
+        type: cronjob
+        cronjob:
+          concurrencyPolicy: Forbid
+          schedule: "@hourly"
+        pod:
+          restartPolicy: OnFailure
+        containers:
+          app:
+            image:
+              repository: alpine/curl
+              tag: "latest"
+            command: ["/bin/sh", "/app/cloudflare-ddns.sh"]
+            env:
+              CLOUDFLARE_EMAIL:
+                valueFrom:
+                  secretKeyRef:
+                    name: cluster-secrets
+                    key: SECRET_CLOUDFLARE_EMAIL
+              CLOUDFLARE_APIKEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: cluster-secrets
+                    key: CLOUDFLARE_APIKEY
+              CLOUDFLARE_RECORD_NAME:
+                valueFrom:
+                  secretKeyRef:
+                    name: cluster-secrets
+                    key: CLOUDFLARE_DDNS_RECORD
+    
     persistence:
       config:
-        enabled: true
         type: configMap
         name: cloudflare-ddns-configmap
-        subPath: cloudflare-ddns.sh
-        mountPath: /app/cloudflare-ddns.sh
         defaultMode: 0775
-        readOnly: true
+        globalMounts:
+          - path: /app/cloudflare-ddns.sh
+            subPath: cloudflare-ddns.sh

@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: cert-manager
-      version: v1.15.3
+      version: v1.17.2
       sourceRef:
         kind: HelmRepository
         name: chart-jetstack
@@ -30,6 +30,4 @@ spec:
       namespace: kube-system
   values:
     installCRDs: true
-    webhook:
-      enabled: true
     replicaCount: 1

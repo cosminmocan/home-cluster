@@ -21,7 +21,7 @@ spec:
   values:
     persistence:
       defaultClass: true
-      defaultClassReplicaCount: 2
+      defaultClassReplicaCount: 1
       reclaimPolicy: Retain
       recurringJobSelector:
         enable: false
@@ -31,5 +31,8 @@ spec:
       nodeDownPodDeletionPolicy: delete-both-statefulset-and-deployment-pod
       restoreVolumeRecurringJobs: true
       concurrentAutomaticEngineUpgradePerNodeLimit: 1
-      defaultDataPath: /mnt/longhorn/
+      defaultDataPath: /var/lib/longhorn/
       backupTarget: "nfs://${STORAGE_NAS_IP}:/volume1/kubeNFS/cluster-backups"
+      # Single-node cluster: every volume's last replica is always on this node,
+      # so block-if-contains-last-replica (the default) permanently blocks all node drain.
+      nodeDrainPolicy: always-allow

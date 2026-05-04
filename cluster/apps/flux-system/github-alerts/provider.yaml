@@ -6,6 +6,6 @@ metadata:
   namespace: flux-system
 spec:
   type: github
-  address: https://github.com/cosminmocan/home-cluster
+  address: https://api.github.com
   secretRef:
     name: github-token
