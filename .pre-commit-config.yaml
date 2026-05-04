@@ -29,9 +29,6 @@ repos:
     rev: v2.1.1
     hooks:
       - id: forbid-secrets
-        exclude: |
-          (?x)^(
-            cluster\/apps\/kube-system\/kube-vip\/rbac.yaml)$
   - repo: https://github.com/gruntwork-io/pre-commit
     rev: v0.1.17
     hooks:

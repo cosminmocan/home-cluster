@@ -1,0 +1,11 @@
+# tofu/talos/image/schematic.yaml
+customization:
+  extraKernelArgs:
+    - -console
+    - console=ttyS0,115200
+  systemExtensions:
+    officialExtensions:
+      - siderolabs/iscsi-tools
+      - siderolabs/qemu-guest-agent
+      - siderolabs/util-linux-tools
+  bootloader: grub
