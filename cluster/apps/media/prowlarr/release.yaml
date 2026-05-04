@@ -1,48 +1,78 @@
 ---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: prowlarr
+  name: &app prowlarr
   namespace: media
 spec:
   interval: 15m
   chart:
     spec:
       chart: app-template
-      version: 1.5.1
+      version: 4.0.1
       sourceRef:
         kind: HelmRepository
         name: chart-bjw
         namespace: flux-system
+  maxHistory: 2
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  uninstall:
+    keepHistory: false
   values:
-    image:
-      repository: ghcr.io/onedr0p/prowlarr-develop
-      tag: 1.13.0.4217
-    hostname: prowlarr
-    env:
-      TZ: ${TIMEZONE}
-      PROWLARR__LOG_LEVEL: info
-      PROWLARR__BRANCH: develop
-      PROWLARR__APPLICATION_URL: "https://prowlarr.${SECRET_DOMAIN}"
-      PROWLARR__POSTGRES_HOST: "${POSTGRES_HOST_ADDRESS}"
-      PROWLARR__POSTGRES_MAIN_DB: prowlarr-main
-      PROWLARR__POSTGRES_LOG_DB: prowlarr-log
-      PROWLARR__POSTGRES_USER: "postgres"
-      PROWLARR__POSTGRES_PASSWORD: "${SECRET_POSTGRES_ADMIN_PASS}"
-      PROWLARR__PORT: &port 9696
-      PROWLARR__API_KEY: "${PROWLARR_SECRET_KEY}"
+    controllers:
+      prowlarr:
+        pod:
+          hostname: prowlarr
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            fsGroup: 1000
+            fsGroupChangePolicy: "OnRootMismatch"
+        containers:
+          app:
+            image:
+              repository: ghcr.io/onedr0p/prowlarr-develop
+              tag: 1.13.0.4217
+            env:
+              TZ: ${TIMEZONE}
+              PROWLARR__LOG_LEVEL: info
+              PROWLARR__BRANCH: develop
+              PROWLARR__APPLICATION_URL: "https://prowlarr.${SECRET_DOMAIN}"
+              PROWLARR__POSTGRES_HOST: "${POSTGRES_HOST_ADDRESS}"
+              PROWLARR__POSTGRES_MAIN_DB: prowlarr-main
+              PROWLARR__POSTGRES_LOG_DB: prowlarr-log
+              PROWLARR__POSTGRES_USER: "postgres"
+              PROWLARR__POSTGRES_PASSWORD: "${SECRET_POSTGRES_ADMIN_PASS}"
+              PROWLARR__PORT: &port 9696
+              PROWLARR__API_KEY: "${PROWLARR_SECRET_KEY}"
+            resources:
+              requests:
+                cpu: 15m
+                memory: 130Mi
+              limits:
+                cpu: 500m
+                memory: 800Mi
     service:
-      main:
+      app:
+        controller: prowlarr
+        annotations:
+          gethomepage.dev/enabled: "true"
+          gethomepage.dev/name: Prowlarr
+          gethomepage.dev/icon: mdi-cat
         ports:
           http:
             port: *port
     ingress:
-      main:
-        enabled: true
-        ingressClassName: nginx
-        annotations:
-          hajimari.io/appName: Prowlarr
-          hajimari.io/icon: mdi:cat
+      prowlarr:
+        className: nginx
         hosts:
           - host: &host "prowlarr.${SECRET_DOMAIN}"
             paths:
@@ -51,19 +81,8 @@ spec:
         tls:
           - hosts:
               - *host
-    podSecurityContext:
-      runAsUser: 1000
-      runAsGroup: 1000
-      fsGroup: 1000
-      fsGroupChangePolicy: "OnRootMismatch"
     persistence:
       config:
-        enabled: true
         existingClaim: prowlarr-config-v2
-    resources:
-      requests:
-        memory: 130Mi
-        cpu: 15m
-      limits:
-        memory: 800Mi
-        cpu: 500m
+        globalMounts:
+          - path: /config
