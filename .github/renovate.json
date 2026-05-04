@@ -30,7 +30,6 @@
     {
       "description": "Dependencies from comments",
       "fileMatch": [
-        "ansible/.+\\.ya?ml$",
         "cluster/.+\\.ya?ml$"
       ],
       "matchStrings": [
