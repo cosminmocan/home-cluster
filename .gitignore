@@ -15,7 +15,11 @@ ansible/.ansible/
 .terraform
 .terraform.tfstate*
 terraform.tfstate*
+*.auto.tfvars
+terraform/talos/output/
 megalinter-reports
+# Claude
+.claude/
 # Python venv
 .venv
 test.yaml
