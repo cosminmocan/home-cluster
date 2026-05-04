@@ -9,6 +9,7 @@
   "schedule": [
     "every weekend"
   ],
+  "minimumReleaseAge": "30 days",
   "dependencyDashboard": true,
   "dependencyDashboardTitle": "[Renovate 🤖] Dependency Dashboard",
   "python": {
