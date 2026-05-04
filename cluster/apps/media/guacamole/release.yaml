@@ -58,7 +58,7 @@ spec:
             port: 8080
     ingress:
       guacamole:
-        className: nginx
+        className: traefik
         hosts:
           - host: &host remote.${SECRET_DOMAIN}
             paths:
