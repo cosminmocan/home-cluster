@@ -28,9 +28,9 @@ module "talos" {
     gateway         = "192.168.100.1"
     proxmox_cluster = "home-cluster"
 
-    # Upgrade path — v1.11/1.30.0 → v1.12/1.31.0 ✓ → v1.13/1.32.0
+    # Upgrade path — v1.11/1.30.0 → v1.12/1.31.0 ✓ → v1.13/1.32.0 ✓ → v1.13/1.33.0 ✓ → v1.14/1.34.0
     talos_version      = "v1.13"
-    kubernetes_version = "1.31.0"
+    kubernetes_version = "1.33.0"
   }
 
   nodes = {
