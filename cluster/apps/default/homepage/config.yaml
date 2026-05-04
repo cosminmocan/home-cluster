@@ -30,20 +30,57 @@ data:
               href: https://youtube.com/
   services.yaml: |
     ---
+    - Media:
+        - Jellyfin:
+            href: https://jellyfin.${SECRET_DOMAIN}
+            icon: si-jellyfin
+        - Music:
+            href: https://music.${SECRET_DOMAIN}
+            icon: si-jellyfin
+        - Photos:
+            href: https://photos.${SECRET_DOMAIN}
+            icon: si-jellyfin
+        - Drive:
+            href: https://drive.${SECRET_DOMAIN}
+            icon: si-jellyfin
+    - Downloads:
+        - qBitTorrent:
+            href: https://qbittorrent.${SECRET_DOMAIN}
+            icon: mdi-cloud-download
+    - Media Automation:
+        - Prowlarr:
+            href: https://prowlarr.${SECRET_DOMAIN}
+            icon: mdi-cat
+        - Radarr:
+            href: https://radarr.${SECRET_DOMAIN}
+            icon: filmstrip
+        - Jellyseerr:
+            href: https://jellyseerr.${SECRET_DOMAIN}
+            icon: mdi-jellyfish-outline
     - Storage:
-      - Synology:
-        href: http://${STORAGE_NAS_IP}:5000
-        description: Synology NAS
-        icon: si-synology
-    - Networking:
-      - SpeedTest:
-          icon: si-speedtest
-          description: Internet SpeedTest
-          href: https://speed.${SECRET_DOMAIN}
-          widget:
-            type: speedtest
-            url: http://speedtest.monitoring.svc.cluster.local
-            bitratePrecision: 3
+        - Longhorn:
+            href: https://longhorn.${SECRET_DOMAIN}
+            icon: mdi-harddisk
+        - Synology:
+            href: http://${STORAGE_NAS_IP}:5000
+            description: Synology NAS
+            icon: si-synology
+    - Security:
+        - Authentik:
+            href: https://auth.${SECRET_DOMAIN}
+            icon: si-webauthn
+    - Monitoring:
+        - Goldilocks:
+            href: https://goldilocks.${SECRET_DOMAIN}
+            icon: mdi-align-vertical-top
+    - Database:
+        - PGAdmin:
+            href: https://pgadmin.${SECRET_DOMAIN}
+            icon: bxl:postgresql
+    - Remote:
+        - Guacamole:
+            href: https://remote.${SECRET_DOMAIN}
+            icon: cbi:guacamole
   widgets.yaml: |
     ---
     - search:
@@ -87,37 +124,32 @@ data:
     color: stone
     target: _self
     headerStyle: clean
+    allowedHosts: home.${SECRET_DOMAIN}
     layout:
-      News:
-        style: column
-        columns: 2
-      Productivity:
-        style: row
-        columns: 3
-      Networking:
-        style: row
-        columns: 2
       Media:
         style: row
-        columns: 3
-      Home:
-        style: row
         columns: 4
+      Downloads:
+        style: row
+        columns: 1
+      Media Automation:
+        style: row
+        columns: 3
       Storage:
+        style: row
+        columns: 2
+      Security:
         style: row
         columns: 1
       Monitoring:
         style: row
-        columns: 3
-      Downloads:
-        style: row
-        columns: 4
-      Media Automation:
-        style: column
         columns: 1
-      Security:
+      Database:
         style: row
-        columns: 2
+        columns: 1
+      Remote:
+        style: row
+        columns: 1
     providers:
       longhorn:
         url: http://longhorn-frontend.longhorn-system.svc.cluster.local
