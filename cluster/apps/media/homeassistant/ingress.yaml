@@ -10,7 +10,7 @@ metadata:
     external-dns.alpha.kubernetes.io/target: "${CLOUDFLARE_DDNS_RECORD}"
     external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
 spec:
-  ingressClassName: nginx
+  ingressClassName: traefik
   rules:
     - host: &host "ha.${SECRET_DOMAIN}"
       http:

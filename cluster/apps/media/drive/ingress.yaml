@@ -10,12 +10,9 @@ metadata:
     gethomepage.dev/icon: si-jellyfin
     external-dns.alpha.kubernetes.io/target: "${CLOUDFLARE_DDNS_RECORD}"
     external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
-    nginx.ingress.kubernetes.io/proxy-body-size: "0"
-    nginx.ingress.kubernetes.io/proxy-max-temp-file-size: "0"
-    nginx.ingress.kubernetes.io/proxy-buffering: "off"
-    nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
+    traefik.ingress.kubernetes.io/router.middlewares: "networking-buffering-large-files@kubernetescrd"
 spec:
-  ingressClassName: nginx
+  ingressClassName: traefik
   rules:
     - host: &host "drive.${SECRET_DOMAIN}"
       http:

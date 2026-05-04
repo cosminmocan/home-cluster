@@ -42,7 +42,7 @@ spec:
     server:
       ingress:
         enabled: true
-        ingressClassName: "nginx"
+        ingressClassName: "traefik"
         annotations:
           gethomepage.dev/enabled: "true"
           gethomepage.dev/icon: si-webauthn
