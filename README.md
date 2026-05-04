@@ -17,7 +17,7 @@ A single-node Kubernetes cluster running on [Talos Linux](https://www.talos.dev/
 | --- | --- |
 | Hypervisor | [Proxmox VE](https://www.proxmox.com/) |
 | OS | Talos Linux v1.13 |
-| Kubernetes | v1.31 |
+| Kubernetes | v1.36 |
 | VM | 1 control-plane node (`ctrl-00`, `192.168.100.10`) |
 
 ## Core Components
@@ -26,7 +26,7 @@ A single-node Kubernetes cluster running on [Talos Linux](https://www.talos.dev/
 | --- | --- |
 | [Cilium](https://cilium.io/) | CNI, kube-proxy replacement, L2 LoadBalancer IP announcements (ARP) |
 | [cert-manager](https://cert-manager.io/) | Automatic TLS certificates |
-| [ingress-nginx](https://github.com/kubernetes/ingress-nginx) | Ingress controller (`192.168.100.30`) |
+| [Traefik](https://traefik.io/) | Ingress controller (`192.168.100.30`), HTTP→HTTPS redirect, ForwardAuth middleware for Authentik |
 | [k8s-gateway](https://github.com/ori-edge/k8s_gateway) | Internal DNS for `*.REDACTED-DOMAIN` (`192.168.100.31`) |
 | [external-dns](https://github.com/kubernetes-sigs/external-dns) | Syncs DNS records to Cloudflare |
 | [cloudflare-ddns](https://github.com/favonia/cloudflare-ddns) | Keeps the public IP record up to date |
