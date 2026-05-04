@@ -70,7 +70,7 @@ spec:
             port: 7878
     ingress:
       radarr:
-        className: nginx
+        className: traefik
         hosts:
           - host: &host "radarr.${SECRET_DOMAIN}"
             paths:
