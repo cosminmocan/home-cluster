@@ -103,7 +103,7 @@ This bug was latent in the schematic for the entire lifetime of the cluster but 
 
 ## Stage 5 — Post-Boot: All LoadBalancer IPs Unreachable
 
-**What happened**: After the cluster came up on v1.13.0, all services backed by LoadBalancer IPs (`<redacted-ip>` for nginx-ingress, `<redacted-ip>` for k8s-gateway DNS) were unreachable from the LAN. DNS queries to k8s-gateway timed out. Every `*.${SECRET_DOMAIN}` hostname was unresolvable.
+**What happened**: After the cluster came up on v1.13.0, all services backed by LoadBalancer IPs (`<redacted-ip>` for nginx-ingress, `<redacted-ip>` for k8s-gateway DNS) were unreachable from the LAN. DNS queries to k8s-gateway timed out. Every `*.REDACTED-DOMAIN` hostname was unresolvable.
 
 **Root cause**: Cilium's L2 announcement policy was configured to send ARP replies on interface `eth0`. The 6.18.24-talos kernel uses predictable network interface naming — on a Q35 machine with the virtio-net device on PCIe slot 18, the interface is named `ens18` instead of `eth0`. Because no interface matched the policy, Cilium sent no ARP replies for the LoadBalancer IPs. The network had no idea which MAC address owned `.30` and `.31`, so all traffic was dropped.
 
