@@ -1,62 +1,86 @@
 ---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: jellyseerr
+  name: &app jellyseerr
   namespace: media
 spec:
   interval: 15m
   chart:
     spec:
       chart: app-template
-      version: 1.5.1
+      version: 4.0.1
       sourceRef:
         kind: HelmRepository
         name: chart-bjw
         namespace: flux-system
+  maxHistory: 2
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  uninstall:
+    keepHistory: false
   values:
-    image:
-      repository: docker.io/fallenbagel/jellyseerr
-      tag: 1.9.2
-    env:
-      TZ: ${TIMEZONE}
-      LOG_LEVEL: "info"
+    controllers:
+      jellyseerr:
+        pod:
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            fsGroup: 1000
+            fsGroupChangePolicy: "OnRootMismatch"
+        containers:
+          app:
+            image:
+              repository: docker.io/fallenbagel/jellyseerr
+              tag: 2.3.0
+            env:
+              TZ: ${TIMEZONE}
+              LOG_LEVEL: "info"
+            resources:
+              requests:
+                cpu: 50m
+                memory: 80Mi
+              limits:
+                cpu: 800m
+                memory: 800Mi
+
     service:
-      main:
+      jellyseerr:
+        controller: jellyseerr
         ports:
           http:
             port: 5055
-    ingress:
-      main:
-        enabled: true
-        ingressClassName: nginx
-        annotations:
-          hajimari.io/appName: Jellyseerr
-          hajimari.io/icon: mdi:jellyfish-outline
-          external-dns.alpha.kubernetes.io/target: "${CLOUDFLARE_DDNS_RECORD}"
 
+    ingress:
+      jellyseerr:
+        enabled: true  # ✅ Ensures ingress is deployed
+        className: nginx
+        annotations:
+          gethomepage.dev/enabled: "true"
+          gethomepage.dev/name: Jellyseerr
+          gethomepage.dev/icon: mdi-jellyfish-outline
+          external-dns.alpha.kubernetes.io/target: "${CLOUDFLARE_DDNS_RECORD}"
         hosts:
-          - host: &host jellyseerr.${SECRET_DOMAIN}
+          - host: &host "jellyseerr.${SECRET_DOMAIN}"
             paths:
               - path: /
                 pathType: Prefix
+                service:
+                  identifier: jellyseerr
+                  port: http
         tls:
           - hosts:
               - *host
-    podSecurityContext:
-      runAsUser: 1000
-      runAsGroup: 1000
-      fsGroup: 1000
-      fsGroupChangePolicy: "OnRootMismatch"
+
     persistence:
       config:
-        enabled: true
         existingClaim: jellyseerr-config
-        mountPath: /app/config
-    resources:
-      requests:
-        cpu: 30m
-        memory: 60Mi
-      limits:
-        memory: 500Mi
-        cpu: 400m
+        globalMounts:
+          - path: /app/config
