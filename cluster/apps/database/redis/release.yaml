@@ -25,6 +25,9 @@ spec:
   uninstall:
     keepHistory: false
   values:
+    global:
+      security:
+        allowInsecureImages: true
     image:
       registry: docker.io
       repository: bitnamilegacy/redis
