@@ -7,15 +7,15 @@ terraform {
     }
     proxmox = {
       source  = "bpg/proxmox"
-      version = "0.61.1"
+      version = "0.100.0"
     }
     kubernetes = {
       source  = "hashicorp/kubernetes"
-      version = "2.31.0"
+      version = "2.38.0"
     }
     restapi = {
       source  = "Mastercard/restapi"
-      version = "1.19.1"
+      version = "1.20.0"
     }
     null = {
       source  = "hashicorp/null"
