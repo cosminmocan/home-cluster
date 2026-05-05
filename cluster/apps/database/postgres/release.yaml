@@ -28,6 +28,8 @@ spec:
     - name: longhorn
       namespace: longhorn-system
   values:
+    global:
+      imageRegistry: registry.bitnami.com
     image:
       repository: bitnami/postgresql
       tag: 16.4.0
