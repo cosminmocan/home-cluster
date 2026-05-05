@@ -51,9 +51,17 @@ data:
         - Prowlarr:
             href: https://prowlarr.${SECRET_DOMAIN}
             icon: mdi-cat
+            widget:
+              type: prowlarr
+              url: http://prowlarr.media.svc.cluster.local:9696
+              key: ${PROWLARR_SECRET_KEY}
         - Radarr:
             href: https://radarr.${SECRET_DOMAIN}
             icon: filmstrip
+            widget:
+              type: radarr
+              url: http://radarr.media.svc.cluster.local:7878
+              key: ${RADARR_SECRET_KEY}
         - Jellyseerr:
             href: https://jellyseerr.${SECRET_DOMAIN}
             icon: mdi-jellyfish-outline
