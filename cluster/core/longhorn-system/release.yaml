@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: longhorn
-      version: 1.9.2
+      version: 1.10.2
       sourceRef:
         kind: HelmRepository
         name: chart-longhorn
@@ -32,6 +32,7 @@ spec:
       restoreVolumeRecurringJobs: true
       concurrentAutomaticEngineUpgradePerNodeLimit: 1
       defaultDataPath: /var/lib/longhorn/
+      defaultReplicaCount: 1
       backupTarget: "nfs://${STORAGE_NAS_IP}:/volume1/kubeNFS/cluster-backups"
       # Single-node cluster: every volume's last replica is always on this node,
       # so block-if-contains-last-replica (the default) permanently blocks all node drain.
