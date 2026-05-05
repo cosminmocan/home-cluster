@@ -24,12 +24,18 @@ spec:
       retries: 3
   uninstall:
     keepHistory: false
+  dependsOn:
+    - name: kube-prometheus-stack
+      namespace: monitoring
   values:
     recommender:
       enabled: true
       image:
         repository: registry.k8s.io/autoscaling/vpa-recommender
         tag: 1.6.0
+      extraArgs:
+        prometheus-address: "http://kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090"
+        storage: prometheus
       resources:
         requests:
           cpu: 15m
