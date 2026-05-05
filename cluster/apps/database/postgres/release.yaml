@@ -28,6 +28,9 @@ spec:
     - name: longhorn
       namespace: longhorn-system
   values:
+    global:
+      security:
+        allowInsecureImages: true
     image:
       registry: docker.io
       repository: bitnamilegacy/postgresql
