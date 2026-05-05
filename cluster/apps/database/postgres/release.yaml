@@ -28,10 +28,9 @@ spec:
     - name: longhorn
       namespace: longhorn-system
   values:
-    global:
-      imageRegistry: registry.bitnami.com
     image:
-      repository: bitnami/postgresql
+      registry: docker.io
+      repository: bitnamilegacy/postgresql
       tag: 16.4.0
     auth:
       enablePostgresUser: true
