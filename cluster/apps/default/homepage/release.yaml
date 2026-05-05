@@ -27,6 +27,7 @@ spec:
   values:
     env:
       TZ: ${TIMEZONE}
+      HOMEPAGE_ALLOWED_HOSTS: "home.${SECRET_DOMAIN}"
     config:
       useExistingConfigMap: *app
     serviceAccount:
