@@ -1,0 +1,103 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: kube-prometheus-stack
+  namespace: monitoring
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: kube-prometheus-stack
+      version: 70.x
+      sourceRef:
+        kind: HelmRepository
+        name: chart-prometheus-community
+        namespace: flux-system
+  maxHistory: 3
+  install:
+    crds: Skip
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    crds: Skip
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    crds:
+      enabled: false
+
+    alertmanager:
+      enabled: false
+
+    grafana:
+      enabled: true
+      defaultDashboardsTimezone: ${TIMEZONE}
+      ingress:
+        enabled: true
+        ingressClassName: traefik
+        hosts:
+          - &host grafana.${SECRET_DOMAIN}
+        tls:
+          - hosts:
+              - *host
+      persistence:
+        enabled: true
+        storageClassName: longhorn
+        size: 2Gi
+      resources:
+        requests:
+          cpu: 15m
+          memory: 128Mi
+        limits:
+          memory: 256Mi
+
+    prometheus:
+      prometheusSpec:
+        retention: 14d
+        retentionSize: 8GB
+        storageSpec:
+          volumeClaimTemplate:
+            spec:
+              storageClassName: longhorn
+              accessModes: ["ReadWriteOnce"]
+              resources:
+                requests:
+                  storage: 10Gi
+        resources:
+          requests:
+            cpu: 50m
+            memory: 512Mi
+          limits:
+            memory: 1Gi
+
+    prometheusOperator:
+      resources:
+        requests:
+          cpu: 15m
+          memory: 128Mi
+        limits:
+          memory: 256Mi
+
+    kube-state-metrics:
+      resources:
+        requests:
+          cpu: 15m
+          memory: 64Mi
+        limits:
+          memory: 128Mi
+
+    nodeExporter:
+      enabled: true
+
+    prometheus-node-exporter:
+      resources:
+        requests:
+          cpu: 15m
+          memory: 32Mi
+        limits:
+          memory: 64Mi
