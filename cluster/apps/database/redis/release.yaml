@@ -25,6 +25,8 @@ spec:
   uninstall:
     keepHistory: false
   values:
+    global:
+      imageRegistry: registry.bitnami.com
     architecture: "standalone"
     auth:
       enabled: false
