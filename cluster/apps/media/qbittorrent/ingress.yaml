@@ -19,7 +19,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: qbittorrent-qbittorrent
+                name: qbittorrent
                 port:
                   number: 8080
   tls:

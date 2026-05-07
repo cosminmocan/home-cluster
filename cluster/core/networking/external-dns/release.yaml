@@ -25,6 +25,9 @@ spec:
       retries: 3
   uninstall:
     keepHistory: false
+  dependsOn:
+    - name: traefik
+      namespace: networking
   values:
     interval: 2m
     provider: cloudflare
