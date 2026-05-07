@@ -26,6 +26,11 @@ spec:
       retries: 3
   uninstall:
     keepHistory: false
+  dependsOn:
+    - name: postgresql
+      namespace: database
+    - name: longhorn
+      namespace: longhorn-system
   values:
     controllers:
       radarr:
