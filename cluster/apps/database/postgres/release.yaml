@@ -40,6 +40,13 @@ spec:
       postgresPassword: ${SECRET_POSTGRES_ADMIN_PASS}
       database: postgres
     primary:
+      resources:
+        requests:
+          cpu: 49m
+          memory: 335Mi
+        limits:
+          cpu: 58m
+          memory: 512Mi
       persistence:
         enabled: true
         existingClaim: postgresql-data
