@@ -1,0 +1,40 @@
+[tools]
+terraform = "1.15.0"
+kubectl = "1.33.9"
+flux2 = "2.8.6"
+talosctl = "1.13.0"
+
+[tasks."terraform:talos:init"]
+description = "Initialize Terraform for the Talos cluster workspace"
+dir = "terraform/talos"
+run = "terraform init $@"
+
+[tasks."terraform:talos:plan"]
+description = "Plan Terraform changes for the Talos cluster"
+dir = "terraform/talos"
+run = "terraform plan $@"
+
+[tasks."terraform:talos:apply"]
+description = "Apply Terraform changes for the Talos cluster"
+dir = "terraform/talos"
+run = "terraform apply $@"
+
+[tasks."terraform:talos:destroy"]
+description = "Destroy Terraform-managed Talos cluster resources"
+dir = "terraform/talos"
+run = "terraform destroy $@"
+
+[tasks."terraform:cloudflare:init"]
+description = "Initialize Terraform for the Cloudflare workspace"
+dir = "terraform/cloudflare"
+run = "terraform init $@"
+
+[tasks."terraform:cloudflare:plan"]
+description = "Plan Terraform changes for Cloudflare"
+dir = "terraform/cloudflare"
+run = "terraform plan $@"
+
+[tasks."terraform:cloudflare:apply"]
+description = "Apply Terraform changes for Cloudflare"
+dir = "terraform/cloudflare"
+run = "terraform apply $@"
