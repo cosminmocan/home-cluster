@@ -9,7 +9,6 @@ resources:
   - radarr
   - jellyfin
   - flaresolverr
-  - guacamole
   - homeassistant
   - drive
   - photos

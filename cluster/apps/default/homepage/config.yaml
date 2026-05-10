@@ -85,10 +85,6 @@ data:
         - PGAdmin:
             href: https://pgadmin.${SECRET_DOMAIN}
             icon: bxl:postgresql
-    - Remote:
-        - Guacamole:
-            href: https://remote.${SECRET_DOMAIN}
-            icon: cbi:guacamole
   widgets.yaml: |
     ---
     - search:
@@ -153,9 +149,6 @@ data:
         style: row
         columns: 1
       Database:
-        style: row
-        columns: 1
-      Remote:
         style: row
         columns: 1
     providers:
