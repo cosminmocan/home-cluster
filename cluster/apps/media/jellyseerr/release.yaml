@@ -48,11 +48,11 @@ spec:
               LOG_LEVEL: "info"
             resources:
               requests:
-                cpu: 50m
-                memory: 80Mi
+                cpu: 15m
+                memory: 320Mi
               limits:
-                cpu: 800m
-                memory: 800Mi
+                cpu: 100m
+                memory: 500Mi
 
     service:
       jellyseerr:

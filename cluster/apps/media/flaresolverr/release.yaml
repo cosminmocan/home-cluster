@@ -36,11 +36,11 @@ spec:
               tag: v3.4.6
             resources:
               requests:
-                cpu: 50m
-                memory: 150Mi
+                cpu: 15m
+                memory: 450Mi
               limits:
-                cpu: 1
-                memory: 800Mi
+                cpu: 100m
+                memory: 600Mi
     service:
       app:
         controller: flaresolverr

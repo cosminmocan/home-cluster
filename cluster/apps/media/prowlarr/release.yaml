@@ -61,10 +61,10 @@ spec:
             resources:
               requests:
                 cpu: 15m
-                memory: 130Mi
+                memory: 220Mi
               limits:
-                cpu: 500m
-                memory: 800Mi
+                cpu: 100m
+                memory: 350Mi
     service:
       app:
         controller: prowlarr

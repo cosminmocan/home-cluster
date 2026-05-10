@@ -48,7 +48,14 @@ spec:
               TZ: ${TIMEZONE}
               QBITTORRENT__PORT: &port 8080
               QBITTORRENT__BT_PORT: &port-bt 18289
-    
+            resources:
+              requests:
+                cpu: 15m
+                memory: 1Gi
+              limits:
+                cpu: 100m
+                memory: 4Gi
+
     service:
       qbittorrent:
         controller: qbittorrent
@@ -68,7 +75,7 @@ spec:
             protocol: TCP
             targetPort: *port-bt
         externalTrafficPolicy: Local
-    
+
     persistence:
       config:
         existingClaim: qbitorrent-config
