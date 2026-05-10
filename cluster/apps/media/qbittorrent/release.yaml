@@ -53,7 +53,6 @@ spec:
                 cpu: 15m
                 memory: 1Gi
               limits:
-                cpu: 100m
                 memory: 4Gi
 
     service:
