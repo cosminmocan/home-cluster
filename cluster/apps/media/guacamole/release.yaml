@@ -42,10 +42,10 @@ spec:
               EXTENSIONS: auth-sso-openid
             resources:
               requests:
-                cpu: 200m
-                memory: 200Mi
+                cpu: 15m
+                memory: 100Mi
               limits:
-                memory: 500Mi
+                memory: 150Mi
     service:
       app:
         controller: guacamole

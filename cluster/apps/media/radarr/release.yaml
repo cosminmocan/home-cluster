@@ -59,10 +59,10 @@ spec:
             resources:
               requests:
                 cpu: 15m
-                memory: 380M
+                memory: 270Mi
               limits:
-                cpu: 500m
-                memory: 970M
+                cpu: 100m
+                memory: 400Mi
     service:
       app:
         controller: radarr
