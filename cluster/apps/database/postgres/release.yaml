@@ -45,7 +45,6 @@ spec:
           cpu: 49m
           memory: 335Mi
         limits:
-          cpu: 58m
           memory: 512Mi
       persistence:
         enabled: true
