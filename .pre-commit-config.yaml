@@ -29,6 +29,10 @@ repos:
     rev: v2.1.1
     hooks:
       - id: forbid-secrets
+  - repo: https://github.com/mongodb/kingfisher
+    rev: v1.99.0
+    hooks:
+      - id: kingfisher
   - repo: https://github.com/gruntwork-io/pre-commit
     rev: v0.1.17
     hooks:
