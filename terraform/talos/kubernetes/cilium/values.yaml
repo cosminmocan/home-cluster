@@ -5,8 +5,7 @@ cluster:
 kubeProxyReplacement: true
 
 bandwidthManager:
-  enabled: true
-  bbr: true
+  enabled: false
 
 loadBalancer:
   acceleration: best-effort
