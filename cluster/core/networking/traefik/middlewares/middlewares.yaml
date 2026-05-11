@@ -48,6 +48,16 @@ spec:
     maxResponseBodyBytes: 0
     memResponseBodyBytes: 10485760
 ---
+# Applied globally on the websecure entrypoint. Safe to use globally — Traefik skips
+# compression for already-compressed content types (images, video, etc.).
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: compress
+  namespace: networking
+spec:
+  compress: {}
+---
 # ForwardAuth for Authentik — used by qBittorrent.
 # Uses the /auth/traefik endpoint (not /auth/nginx).
 # The redirect to the Authentik login page is handled by the outpost itself;
