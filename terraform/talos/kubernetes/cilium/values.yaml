@@ -4,7 +4,6 @@ cluster:
 
 kubeProxyReplacement: true
 
-
 # Talos specific
 k8sServiceHost: localhost
 k8sServicePort: 7445
@@ -103,7 +102,6 @@ standaloneDnsProxy:
 clustermesh:
   mcsapi:
     enabled: false
-
 
 # mTLS
 authentication:
