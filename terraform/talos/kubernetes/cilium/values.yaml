@@ -82,6 +82,8 @@ hubble:
   relay:
     enabled: true
     rollOutPods: true
+    logOptions:
+      format: json
   ui:
     enabled: true
     rollOutPods: true
@@ -100,6 +102,14 @@ hubble:
 ingressController:
   enabled: false
   default: false
+
+standaloneDnsProxy:
+  enabled: false
+
+clustermesh:
+  mcsapi:
+    enabled: false
+
 
 # mTLS
 authentication:
