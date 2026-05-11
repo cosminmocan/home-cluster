@@ -4,9 +4,6 @@ cluster:
 
 kubeProxyReplacement: true
 
-bpf:
-  masquerade: true
-
 bandwidthManager:
   enabled: true
   bbr: true
