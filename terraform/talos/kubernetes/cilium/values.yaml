@@ -4,11 +4,6 @@ cluster:
 
 kubeProxyReplacement: true
 
-bandwidthManager:
-  enabled: false
-
-loadBalancer:
-  acceleration: best-effort
 
 # Talos specific
 k8sServiceHost: localhost
