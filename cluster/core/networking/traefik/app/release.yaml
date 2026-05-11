@@ -90,6 +90,7 @@ spec:
             options: "networking-tlsoptions@kubernetescrd"
           middlewares:
             - "networking-default-headers@kubernetescrd"
+            - "networking-compress@kubernetescrd"
         forwardedHeaders:
           trustedIPs:
             - "173.245.48.0/20"
@@ -136,7 +137,7 @@ spec:
 
     resources:
       requests:
-        cpu: 20m
+        cpu: 50m
         memory: 200Mi
       limits:
         memory: 500Mi
