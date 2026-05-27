@@ -40,10 +40,6 @@ spec:
       ingress:
         enabled: true
         ingressClassName: traefik
-        annotations:
-          gethomepage.dev/enabled: "true"
-          gethomepage.dev/name: Goldilocks
-          gethomepage.dev/icon: mdi-align-vertical-top
         hosts:
           - host: &host goldilocks.${SECRET_DOMAIN}
             paths:

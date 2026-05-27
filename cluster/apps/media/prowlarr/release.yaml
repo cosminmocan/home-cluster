@@ -67,10 +67,6 @@ spec:
     service:
       app:
         controller: prowlarr
-        annotations:
-          gethomepage.dev/enabled: "true"
-          gethomepage.dev/name: Prowlarr
-          gethomepage.dev/icon: mdi-cat
         ports:
           http:
             port: *port

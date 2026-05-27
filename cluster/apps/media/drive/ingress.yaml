@@ -5,9 +5,6 @@ metadata:
   name: driveingress
   namespace: media
   annotations:
-    gethomepage.dev/enabled: "true"
-    gethomepage.dev/name: drive
-    gethomepage.dev/icon: si-jellyfin
     external-dns.alpha.kubernetes.io/target: "${CLOUDFLARE_DDNS_RECORD}"
     external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
     traefik.ingress.kubernetes.io/router.middlewares: "networking-buffering-large-files@kubernetescrd"
