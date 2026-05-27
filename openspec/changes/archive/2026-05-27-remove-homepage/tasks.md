@@ -43,47 +43,47 @@ Each step removes the now-meaningless `gethomepage.dev/*` (and one `hajimari.io/
 
 ## 4. Lint and commit
 
-- [ ] 4.1 Run pre-commit hooks locally to catch yamllint / trailing-whitespace issues:
+- [x] 4.1 Run pre-commit hooks locally to catch yamllint / trailing-whitespace issues:
   ```bash
   pre-commit run --all-files
   ```
-- [ ] 4.2 Stage and commit:
+- [x] 4.2 Stage and commit:
   ```bash
   git add -A cluster/apps openspec/changes/remove-homepage
   git status
   git commit -m "Retire Homepage dashboard and strip orphan annotations"
   ```
-- [ ] 4.3 Push to `main` (or open a PR if branch protection requires one):
+- [x] 4.3 Push to `main` (or open a PR if branch protection requires one):
   ```bash
   git push origin main
   ```
 
 ## 5. Verify in-cluster cleanup
 
-- [ ] 5.1 Watch Flux apply the change (Discord alerts should announce the `apps` Kustomization reconciling):
+- [x] 5.1 Watch Flux apply the change (Discord alerts should announce the `apps` Kustomization reconciling):
   ```bash
   eval "$(direnv export zsh 2>/dev/null)" && \
     flux reconcile kustomization apps -n flux-system --with-source
   ```
-- [ ] 5.2 Confirm the HelmRelease, ConfigMap, and Ingress are gone:
+- [x] 5.2 Confirm the HelmRelease, ConfigMap, and Ingress are gone:
   ```bash
   eval "$(direnv export zsh 2>/dev/null)" && \
     kubectl get helmrelease,configmap,ingress -n default | grep -i homepage
   ```
   Expect: no `homepage`-named resources.
-- [ ] 5.3 Confirm `home.${SECRET_DOMAIN}` no longer resolves on the LAN:
+- [x] 5.3 Confirm `home.${SECRET_DOMAIN}` no longer resolves on the LAN:
   ```bash
   eval "$(direnv export zsh 2>/dev/null)" && \
     dig "home.$(kubectl get secret cluster-secrets -n flux-system -o jsonpath='{.data.SECRET_DOMAIN}' | base64 -d)" @192.168.100.31 +short
   ```
   Expect: empty output (NXDOMAIN).
-- [ ] 5.4 Confirm external-dns dropped the public Cloudflare record:
+- [x] 5.4 Confirm external-dns dropped the public Cloudflare record:
   ```bash
   eval "$(direnv export zsh 2>/dev/null)" && \
     kubectl logs -n networking deploy/external-dns --tail=200 | grep -i 'home\.'
   ```
   Expect: a recent log line indicating the `home.*` record was deleted from Cloudflare.
-- [ ] 5.5 Spot-check one of the apps whose annotations were stripped — its own Ingress should still resolve and respond:
+- [x] 5.5 Spot-check one of the apps whose annotations were stripped — its own Ingress should still resolve and respond:
   ```bash
   curl -sIk "https://radarr.$(kubectl get secret cluster-secrets -n flux-system -o jsonpath='{.data.SECRET_DOMAIN}' | base64 -d)/" | head -1
   ```
