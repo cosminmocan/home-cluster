@@ -54,10 +54,6 @@ spec:
     ingress:
       enabled: true
       ingressClassName: "traefik"
-      annotations:
-        gethomepage.dev/enabled: "true"
-        gethomepage.dev/name: PGAdmin
-        gethomepage.dev/icon: bxl:postgresql
       hosts:
         - host: &host pgadmin.${SECRET_DOMAIN}
           paths:

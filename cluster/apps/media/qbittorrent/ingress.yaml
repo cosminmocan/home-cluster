@@ -5,9 +5,6 @@ metadata:
   name: qbittorrent
   namespace: media
   annotations:
-    gethomepage.dev/enabled: "true"
-    gethomepage.dev/name: qBitTorrent
-    gethomepage.dev/icon: mdi-cloud-download
     traefik.ingress.kubernetes.io/router.middlewares: "networking-authentik-forwardauth@kubernetescrd"
 spec:
   ingressClassName: traefik

@@ -46,9 +46,6 @@ spec:
         enabled: true
         ingressClassName: "traefik"
         annotations:
-          gethomepage.dev/enabled: "true"
-          gethomepage.dev/icon: si-webauthn
-          gethomepage.dev/name: Authentik
           external-dns.alpha.kubernetes.io/target: "${CLOUDFLARE_DDNS_RECORD}"
         hosts:
           - &host auth.${SECRET_DOMAIN}

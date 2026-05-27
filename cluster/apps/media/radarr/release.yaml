@@ -65,10 +65,6 @@ spec:
     service:
       app:
         controller: radarr
-        annotations:
-          gethomepage.dev/enabled: "true"
-          gethomepage.dev/name: radarr
-          gethomepage.dev/icon: filmstrip
         ports:
           http:
             port: 7878
