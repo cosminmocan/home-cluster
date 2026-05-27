@@ -1,0 +1,102 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: paperless-ngx
+  namespace: media
+spec:
+  interval: 15m
+  chart:
+    spec:
+      chart: paperless-ngx
+      version: 0.24.1
+      sourceRef:
+        kind: HelmRepository
+        name: chart-gabe565
+        namespace: flux-system
+  maxHistory: 3
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  uninstall:
+    keepHistory: false
+  dependsOn:
+    - name: postgresql
+      namespace: database
+    - name: redis
+      namespace: database
+    - name: longhorn
+      namespace: longhorn-system
+  values:
+    image:
+      repository: ghcr.io/paperless-ngx/paperless-ngx
+      tag: 2.14.7
+
+    env:
+      TZ: ${TIMEZONE}
+      PAPERLESS_URL: "https://docs.${SECRET_DOMAIN}"
+      PAPERLESS_SECRET_KEY: "${SECRET_PAPERLESS_KEY}"
+      PAPERLESS_DBHOST: "${POSTGRES_HOST_ADDRESS}"
+      PAPERLESS_DBPORT: "5432"
+      PAPERLESS_DBNAME: paperless
+      PAPERLESS_DBUSER: postgres
+      PAPERLESS_DBPASS: "${SECRET_POSTGRES_ADMIN_PASS}"
+      PAPERLESS_REDIS: "redis://${REDIS_HOST_ADDRESS}:6379"
+      PAPERLESS_OCR_LANGUAGE: eng
+      PAPERLESS_ADMIN_USER: admin
+      PAPERLESS_ADMIN_PASSWORD: "${SECRET_PAPERLESS_ADMIN_PASS}"
+      PAPERLESS_ADMIN_MAIL: "admin@${SECRET_DOMAIN}"
+
+    # The bundled subcharts are disabled — the cluster's shared PostgreSQL and
+    # Redis are used instead via the env vars above.
+    postgresql:
+      enabled: false
+    redis:
+      enabled: false
+
+    ingress:
+      main:
+        enabled: true
+        ingressClassName: traefik
+        hosts:
+          - host: &host "docs.${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                pathType: Prefix
+        tls:
+          - hosts:
+              - *host
+
+    persistence:
+      data:
+        enabled: true
+        storageClass: longhorn
+        accessMode: ReadWriteOnce
+        size: 5Gi
+      media:
+        enabled: true
+        storageClass: nfs-client
+        accessMode: ReadWriteOnce
+        size: 50Gi
+      consume:
+        enabled: true
+        storageClass: nfs-client
+        accessMode: ReadWriteOnce
+        size: 5Gi
+      export:
+        enabled: true
+        storageClass: longhorn
+        accessMode: ReadWriteOnce
+        size: 1Gi
+
+    resources:
+      requests:
+        cpu: 50m
+        memory: 400Mi
+      limits:
+        memory: 1Gi
