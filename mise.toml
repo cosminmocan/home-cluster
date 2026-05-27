@@ -1,5 +1,5 @@
 [tools]
-terraform = "1.15.0"
+terraform = "1.15.4"
 kubectl = "1.33.9"
 flux2 = "2.8.6"
 talosctl = "1.13.0"
