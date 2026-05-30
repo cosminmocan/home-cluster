@@ -97,13 +97,6 @@ spec:
     grafana:
       enabled: true
       defaultDashboardsTimezone: ${TIMEZONE}
-      # Loki logs datasource (Phase 3) — lets you pivot from a metric to its logs.
-      additionalDataSources:
-        - name: Loki
-          type: loki
-          uid: loki
-          access: proxy
-          url: http://loki.monitoring.svc.cluster.local:3100
       ingress:
         enabled: true
         ingressClassName: traefik
