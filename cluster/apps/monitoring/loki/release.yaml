@@ -47,7 +47,7 @@ spec:
       storage:
         type: filesystem
       limits_config:
-        retention_period: 168h # 7d — trimmed to cut disk/write I/O on Longhorn
+        retention_period: 336h # 14d
         # Accept the backlog Alloy reads from long-lived pods' existing log files
         # on first start (otherwise Loki 400s "entry too old" and spams errors).
         # Retention above still trims anything older than 14d.
@@ -90,8 +90,7 @@ spec:
         enabled: false
         grafanaAgent:
           installOperator: false
+      lokiCanary:
+        enabled: false
       serviceMonitor:
         enabled: true
-    # Top-level key (not under monitoring) — disables the canary DaemonSet.
-    lokiCanary:
-      enabled: false
