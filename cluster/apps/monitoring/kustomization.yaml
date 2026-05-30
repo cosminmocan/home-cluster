@@ -8,3 +8,4 @@ resources:
   - vpa
   - loki
   - alloy
+  - blackbox-exporter
