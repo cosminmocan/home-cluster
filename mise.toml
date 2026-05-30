@@ -1,6 +1,6 @@
 [tools]
 terraform = "1.15.0"
-kubectl = "1.33.9"
+kubectl = "1.36.0"
 flux2 = "2.8.8"
 talosctl = "1.13.2"
 
