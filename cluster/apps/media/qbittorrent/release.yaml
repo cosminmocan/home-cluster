@@ -54,6 +54,20 @@ spec:
                 memory: 1Gi
               limits:
                 memory: 4Gi
+          metrics:
+            image:
+              repository: ghcr.io/esanchezm/prometheus-qbittorrent-exporter
+              tag: v1.6.0
+            env:
+              QBITTORRENT_HOST: localhost
+              QBITTORRENT_PORT: *port
+              EXPORTER_PORT: &metrics-port 8000
+            resources:
+              requests:
+                cpu: 10m
+                memory: 32Mi
+              limits:
+                memory: 64Mi
 
     service:
       qbittorrent:
@@ -61,6 +75,8 @@ spec:
         ports:
           http:
             port: *port
+          metrics:
+            port: *metrics-port
       bittorrent:
         controller: qbittorrent
         type: LoadBalancer

@@ -64,12 +64,29 @@ spec:
                 memory: 220Mi
               limits:
                 memory: 350Mi
+          metrics:
+            image:
+              repository: ghcr.io/onedr0p/exportarr
+              tag: v2.2.0
+            args: ["prowlarr"]
+            env:
+              PORT: &metrics-port 9708
+              URL: "http://localhost:9696"
+              APIKEY: "${PROWLARR_SECRET_KEY}"
+            resources:
+              requests:
+                cpu: 10m
+                memory: 32Mi
+              limits:
+                memory: 64Mi
     service:
       app:
         controller: prowlarr
         ports:
           http:
             port: *port
+          metrics:
+            port: *metrics-port
     ingress:
       prowlarr:
         className: traefik
