@@ -28,11 +28,11 @@ resource "proxmox_virtual_environment_vm" "this" {
   }
 
   network_device {
-    bridge      = "vmbr0"
+    bridge = "vmbr0"
   }
 
   vga {
-    type        = "serial0"
+    type = "serial0"
 
   }
 
@@ -44,8 +44,10 @@ resource "proxmox_virtual_environment_vm" "this" {
     discard      = "on"
     ssd          = true
     file_format  = "raw"
-    size         = 25
-    file_id      = proxmox_virtual_environment_download_file.this["${each.value.host_node}_${each.value.update == true ? local.update_image_id : local.image_id}"].id
+    # Matches the live VM disk (40 GiB). Do not lower this — the proxmox provider
+    # cannot shrink a disk, and a smaller value makes plans try to (and risk data loss).
+    size    = 40
+    file_id = proxmox_virtual_environment_download_file.this["${each.value.host_node}_${each.value.update == true ? local.update_image_id : local.image_id}"].id
   }
 
   disk {
