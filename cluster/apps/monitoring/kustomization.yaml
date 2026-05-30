@@ -6,5 +6,3 @@ resources:
   - kube-prometheus-stack
   - goldilocks
   - vpa
-  - loki
-  - alloy
