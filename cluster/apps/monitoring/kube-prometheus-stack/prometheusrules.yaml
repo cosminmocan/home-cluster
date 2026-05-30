@@ -1,0 +1,43 @@
+---
+# Homelab-specific alert rules layered on top of the chart's defaultRules.
+# These only use metrics already scraped today (kubelet volume stats +
+# node-exporter), so they are live as soon as Alertmanager is enabled.
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: homelab-rules
+  namespace: monitoring
+  labels:
+    release: kube-prometheus-stack
+spec:
+  groups:
+    - name: homelab.storage
+      rules:
+        - alert: HomelabPVCNearlyFull
+          # Warn earlier (85%) than the chart default, since Longhorn volumes
+          # here are small and fill quickly.
+          expr: |
+            (
+              kubelet_volume_stats_available_bytes
+                / kubelet_volume_stats_capacity_bytes
+            ) < 0.15
+          for: 15m
+          labels:
+            severity: warning
+          annotations:
+            summary: "PVC {{ $labels.persistentvolumeclaim }} is over 85% full"
+            description: "{{ $labels.persistentvolumeclaim }} in {{ $labels.namespace }} has less than 15% free space."
+
+    - name: homelab.node
+      rules:
+        - alert: HomelabNodeMemoryHigh
+          expr: |
+            (
+              1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)
+            ) > 0.90
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Node memory usage above 90%"
+            description: "The cluster node has been using more than 90% of its memory for over 10 minutes. As this is a single-node VM, investigate before it starts OOM-killing pods."
