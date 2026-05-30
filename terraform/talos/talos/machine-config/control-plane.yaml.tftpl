@@ -24,6 +24,14 @@ machine:
 
 cluster:
   allowSchedulingOnControlPlanes: true
+  # Bind metrics to all interfaces (default is 127.0.0.1) so kube-prometheus-stack
+  # can scrape kube-controller-manager (10257) and kube-scheduler (10259).
+  controllerManager:
+    extraArgs:
+      bind-address: 0.0.0.0
+  scheduler:
+    extraArgs:
+      bind-address: 0.0.0.0
   apiServer:
     admissionControl:
       - name: PodSecurity
