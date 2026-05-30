@@ -1,0 +1,18 @@
+---
+# Longhorn manager exposes Prometheus metrics on the longhorn-backend service
+# (port "manager", 9500) at /metrics. The chart ships no ServiceMonitor, so define one.
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: longhorn
+  namespace: longhorn-system
+  labels:
+    release: kube-prometheus-stack
+spec:
+  selector:
+    matchLabels:
+      app: longhorn-manager
+  endpoints:
+    - port: manager
+      path: /metrics
+      interval: 30s

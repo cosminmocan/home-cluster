@@ -49,3 +49,16 @@ spec:
       persistence:
         enabled: true
         existingClaim: postgresql-data
+    metrics:
+      enabled: true
+      image:
+        registry: docker.io
+        repository: bitnamilegacy/postgres-exporter
+      serviceMonitor:
+        enabled: true
+      resources:
+        requests:
+          cpu: 10m
+          memory: 32Mi
+        limits:
+          memory: 64Mi
