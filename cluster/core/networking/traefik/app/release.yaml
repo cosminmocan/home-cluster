@@ -145,3 +145,10 @@ spec:
     ingressRoute:
       dashboard:
         enabled: false
+
+    metrics:
+      prometheus:
+        service:
+          enabled: true
+        serviceMonitor:
+          enabled: true

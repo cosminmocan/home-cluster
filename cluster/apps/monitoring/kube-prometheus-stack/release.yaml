@@ -109,17 +109,57 @@ spec:
         enabled: true
         storageClassName: longhorn
         size: 2Gi
+      # Provision app dashboards as-code (fetched from grafana.com at pod start).
+      dashboardProviders:
+        dashboardproviders.yaml:
+          apiVersion: 1
+          providers:
+            - name: default
+              orgId: 1
+              folder: ""
+              type: file
+              disableDeletion: false
+              editable: true
+              options:
+                path: /var/lib/grafana/dashboards/default
+      dashboards:
+        default:
+          traefik:
+            gnetId: 17346
+            revision: 9
+            datasource: Prometheus
+          longhorn:
+            gnetId: 16888
+            revision: 9
+            datasource: Prometheus
+          postgresql:
+            gnetId: 9628
+            revision: 7
+            datasource: Prometheus
+          redis:
+            gnetId: 11835
+            revision: 1
+            datasource: Prometheus
+          cert-manager:
+            gnetId: 11001
+            revision: 1
+            datasource: Prometheus
       resources:
         requests:
           cpu: 25m
           memory: 370Mi
         limits:
-          memory: 400Mi
+          memory: 512Mi
 
     prometheus:
       prometheusSpec:
         retention: 14d
         retentionSize: 8GB
+        # Discover ServiceMonitors/PodMonitors/Probes created by subcharts and
+        # standalone manifests, not just those labelled release=kube-prometheus-stack.
+        serviceMonitorSelectorNilUsesHelmValues: false
+        podMonitorSelectorNilUsesHelmValues: false
+        probeSelectorNilUsesHelmValues: false
         storageSpec:
           volumeClaimTemplate:
             spec:
