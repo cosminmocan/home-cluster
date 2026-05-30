@@ -48,10 +48,8 @@ spec:
         type: filesystem
       limits_config:
         retention_period: 336h # 14d
-        # Accept the backlog Alloy reads from long-lived pods' existing log files
-        # on first start (otherwise Loki 400s "entry too old" and spams errors).
-        # Retention above still trims anything older than 14d.
-        reject_old_samples: false
+        reject_old_samples: true
+        reject_old_samples_max_age: 168h
       compactor:
         retention_enabled: true
         delete_request_store: filesystem
