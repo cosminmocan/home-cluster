@@ -58,9 +58,9 @@ spec:
             memory: 96Mi
       # Routing: everything goes to Discord except the always-firing Watchdog.
       # Discord is reached via its Slack-compatible webhook endpoint, so we use
-      # slack_configs. ${SECRET_PROMETHEUS_DISCORD_WEBHOOK} is injected by Flux
-      # postBuild substitution from the cluster-secrets Secret and must be the
-      # Discord webhook URL with the "/slack" suffix.
+      # slack_configs. ${SECRET_PROMETHEUS_DISCORD_WEBHOOK} (injected by Flux
+      # postBuild substitution from cluster-secrets) holds the raw Discord
+      # webhook URL; the "/slack" suffix below switches it to Slack-payload mode.
       config:
         global:
           resolve_timeout: 5m
@@ -78,7 +78,7 @@ spec:
           - name: "null"
           - name: discord
             slack_configs:
-              - api_url: ${SECRET_PROMETHEUS_DISCORD_WEBHOOK}
+              - api_url: ${SECRET_PROMETHEUS_DISCORD_WEBHOOK}/slack
                 send_resolved: true
                 title: >-
                   {{ if eq .Status "firing" }}🔥{{ else }}✅{{ end }} [{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] {{ .CommonLabels.alertname }}
