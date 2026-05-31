@@ -1,0 +1,44 @@
+---
+# LogQL alerting rules evaluated by the Loki ruler → Alertmanager → Discord.
+# Mounted into /etc/loki/rules/fake (single tenant, auth disabled).
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: loki-alerting-rules
+  namespace: monitoring
+data:
+  homelab-logs.yaml: |
+    groups:
+      - name: homelab-logs
+        rules:
+          - alert: HighLogErrorRate
+            # Sustained burst of error-level log lines in any namespace.
+            expr: |
+              sum by (namespace) (rate({namespace=~".+"} |~ `(?i)(level=error|"level":"error"|level=fatal|"level":"fatal")` [5m])) > 10
+            for: 10m
+            labels:
+              severity: warning
+            annotations:
+              summary: "High error-log rate in {{ $labels.namespace }}"
+              description: "More than 10 error/fatal log lines per second for 10m in namespace {{ $labels.namespace }}."
+
+          - alert: AuthentikFailedLoginBurst
+            expr: |
+              sum (rate({namespace="database", pod=~"authentik.*"} |~ `(?i)(authentication failed|invalid credentials|login failed|failed login)` [10m])) > 1
+            for: 5m
+            labels:
+              severity: warning
+            annotations:
+              summary: "Burst of failed Authentik logins"
+              description: "Authentik is logging repeated authentication failures — possible brute-force attempt or a broken integration."
+
+          - alert: ContainerOOMOrPanic
+            # Fatal crash signatures that often precede / accompany a restart.
+            expr: |
+              sum by (namespace, pod) (count_over_time({namespace=~".+"} |~ `(?i)(out of memory|fatal error: runtime|panic:|segmentation fault)` [5m])) > 0
+            for: 0m
+            labels:
+              severity: critical
+            annotations:
+              summary: "OOM/panic logged in {{ $labels.namespace }}/{{ $labels.pod }}"
+              description: "A container logged an out-of-memory or fatal panic message in the last 5 minutes."

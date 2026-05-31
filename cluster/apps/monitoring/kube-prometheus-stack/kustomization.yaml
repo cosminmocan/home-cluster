@@ -4,3 +4,4 @@ kind: Kustomization
 resources:
   - release.yaml
   - prometheusrules.yaml
+  - dashboard-homelab.yaml
