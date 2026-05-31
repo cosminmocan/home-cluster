@@ -1,0 +1,27 @@
+---
+# LAN-only ingress for the Hubble UI (Cilium network observability), mirroring how
+# Grafana/Prometheus are exposed: Traefik + the wildcard cert, and NO external-dns
+# annotation → resolvable only internally via k8s-gateway, never published publicly.
+# Lives in kube-system because an Ingress backend must share the service's namespace
+# (Cilium/Hubble run in kube-system, bootstrapped outside Flux).
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hubble-ui
+  namespace: kube-system
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: &host hubble.${SECRET_DOMAIN}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: hubble-ui
+                port:
+                  number: 80
+  tls:
+    - hosts:
+        - *host
