@@ -44,11 +44,31 @@ spec:
         - "https://goldilocks.${SECRET_DOMAIN}"
         - "https://longhorn.${SECRET_DOMAIN}"
         - "https://pgadmin.${SECRET_DOMAIN}"
-        - "https://radarr.${SECRET_DOMAIN}"
-        - "https://prowlarr.${SECRET_DOMAIN}"
         - "https://qbittorrent.${SECRET_DOMAIN}"
         - "https://jellyseerr.${SECRET_DOMAIN}"
         - "https://docs.${SECRET_DOMAIN}"
         - "https://auth.${SECRET_DOMAIN}"
+      labels:
+        tier: cluster
+---
+# Servarr apps (Radarr/Prowlarr) have auth enabled, so GET / returns 401 and
+# fails http_2xx. Probe their unauthenticated /ping health endpoint instead.
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  name: servarr-apps
+  namespace: monitoring
+  labels:
+    release: kube-prometheus-stack
+spec:
+  interval: 60s
+  module: http_2xx
+  prober:
+    url: blackbox-exporter.monitoring.svc.cluster.local:9115
+  targets:
+    staticConfig:
+      static:
+        - "https://radarr.${SECRET_DOMAIN}/ping"
+        - "https://prowlarr.${SECRET_DOMAIN}/ping"
       labels:
         tier: cluster
