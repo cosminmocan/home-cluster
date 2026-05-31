@@ -13,8 +13,10 @@ data:
         rules:
           - alert: HighLogErrorRate
             # Sustained burst of error-level log lines in any namespace.
+            # `!= "query_hash"` drops Loki's own ruler logs, which echo the rule
+            # query string (and thus the words below) and would self-match.
             expr: |
-              sum by (namespace) (rate({namespace=~".+"} |~ `(?i)(level=error|"level":"error"|level=fatal|"level":"fatal")` [5m])) > 10
+              sum by (namespace) (rate({namespace=~".+"} |~ `(?i)(level=error|"level":"error"|level=fatal|"level":"fatal")` != "query_hash" [5m])) > 10
             for: 10m
             labels:
               severity: warning
@@ -34,8 +36,10 @@ data:
 
           - alert: ContainerOOMOrPanic
             # Fatal crash signatures that often precede / accompany a restart.
+            # `!= "query_hash"` excludes Loki's ruler logs, which echo this very
+            # query (containing the words below) and caused a self-match loop.
             expr: |
-              sum by (namespace, pod) (count_over_time({namespace=~".+"} |~ `(?i)(out of memory|fatal error: runtime|panic:|segmentation fault)` [5m])) > 0
+              sum by (namespace, pod) (count_over_time({namespace=~".+"} |~ `(?i)(out of memory|fatal error: runtime|panic:|segmentation fault)` != "query_hash" [5m])) > 0
             for: 0m
             labels:
               severity: critical
