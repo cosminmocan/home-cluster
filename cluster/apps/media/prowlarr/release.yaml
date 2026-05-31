@@ -41,6 +41,20 @@ spec:
             runAsGroup: 1000
             fsGroup: 1000
             fsGroupChangePolicy: "OnRootMismatch"
+        initContainers:
+          # Wait until Postgres accepts connections before the app starts its DB
+          # migration — prevents the boot race (e.g. after a node reboot) that left
+          # Prowlarr stuck in "waiting for user intervention".
+          wait-for-db:
+            image:
+              repository: docker.io/bitnamilegacy/postgresql
+              tag: 17.6.0-debian-12-r4
+            env:
+              POSTGRES_HOST: "${POSTGRES_HOST_ADDRESS}"
+            command:
+              - sh
+              - -c
+              - until pg_isready -h "$POSTGRES_HOST" -p 5432 -U postgres; do echo "waiting for postgres..."; sleep 3; done
         containers:
           app:
             image:
@@ -64,6 +78,32 @@ spec:
                 memory: 220Mi
               limits:
                 memory: 350Mi
+            # HTTP probes on /ping (unauthenticated). Startup gives slow first-boot
+            # (DB migration) room; liveness restarts a stuck app instead of leaving
+            # it "ready" but dead; readiness only sends traffic when actually serving.
+            probes:
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet: { path: /ping, port: 9696 }
+                  initialDelaySeconds: 10
+                  periodSeconds: 5
+                  failureThreshold: 30
+              liveness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet: { path: /ping, port: 9696 }
+                  periodSeconds: 30
+                  failureThreshold: 5
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet: { path: /ping, port: 9696 }
+                  periodSeconds: 15
+                  failureThreshold: 3
           metrics:
             image:
               repository: ghcr.io/onedr0p/exportarr
