@@ -166,6 +166,10 @@ spec:
             gnetId: 13659
             revision: 1
             datasource: Prometheus
+          cilium:
+            gnetId: 16611
+            revision: 1
+            datasource: Prometheus
       resources:
         requests:
           cpu: 25m
