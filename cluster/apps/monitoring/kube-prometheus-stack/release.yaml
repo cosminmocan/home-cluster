@@ -97,6 +97,13 @@ spec:
     grafana:
       enabled: true
       defaultDashboardsTimezone: ${TIMEZONE}
+      # Loki logs datasource (Phase 3) — lets you pivot from a metric to its logs.
+      additionalDataSources:
+        - name: Loki
+          type: loki
+          uid: loki
+          access: proxy
+          url: http://loki.monitoring.svc.cluster.local:3100
       ingress:
         enabled: true
         ingressClassName: traefik
@@ -144,6 +151,10 @@ spec:
             gnetId: 11001
             revision: 1
             datasource: Prometheus
+          blackbox-exporter:
+            gnetId: 13659
+            revision: 1
+            datasource: Prometheus
       resources:
         requests:
           cpu: 25m
@@ -153,8 +164,8 @@ spec:
 
     prometheus:
       prometheusSpec:
-        retention: 14d
-        retentionSize: 8GB
+        retention: 7d
+        retentionSize: 4GB
         # Discover ServiceMonitors/PodMonitors/Probes created by subcharts and
         # standalone manifests, not just those labelled release=kube-prometheus-stack.
         serviceMonitorSelectorNilUsesHelmValues: false
