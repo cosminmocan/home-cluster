@@ -15,6 +15,7 @@ spec:
   # commit status; core-managed sub-Kustomizations are auto-covered by the label match below.
   eventSources:
     - kind: Kustomization
+      name: '*'
       matchLabels:
         kustomize.toolkit.fluxcd.io/name: core
     - kind: Kustomization
