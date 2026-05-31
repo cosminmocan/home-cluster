@@ -93,6 +93,17 @@ spec:
           - source_matchers: ['severity = "critical"']
             target_matchers: ['severity = "warning"']
             equal: ["alertname", "namespace"]
+      # LAN-only ingress (no external-dns annotation → resolvable only internally, like Grafana).
+      ingress:
+        enabled: true
+        ingressClassName: traefik
+        hosts:
+          - alertmanager.${SECRET_DOMAIN}
+        paths:
+          - /
+        tls:
+          - hosts:
+              - alertmanager.${SECRET_DOMAIN}
 
     grafana:
       enabled: true
@@ -193,6 +204,17 @@ spec:
             memory: 512Mi
           limits:
             memory: 1Gi
+      # LAN-only ingress (no external-dns annotation → resolvable only internally, like Grafana).
+      ingress:
+        enabled: true
+        ingressClassName: traefik
+        hosts:
+          - prometheus.${SECRET_DOMAIN}
+        paths:
+          - /
+        tls:
+          - hosts:
+              - prometheus.${SECRET_DOMAIN}
 
     prometheusOperator:
       resources:

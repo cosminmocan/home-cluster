@@ -1,0 +1,25 @@
+---
+# LAN-only ingress for the Alloy UI (no external-dns annotation → resolvable only
+# internally, like Grafana). The chart's own ingress targets the Faro port (12347),
+# so a standalone Ingress is used to reach the web UI / pipeline graph on 12345.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: alloy
+  namespace: monitoring
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: &host alloy.${SECRET_DOMAIN}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: alloy
+                port:
+                  number: 12345
+  tls:
+    - hosts:
+        - *host
