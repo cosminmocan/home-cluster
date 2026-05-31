@@ -57,6 +57,17 @@ spec:
         delete_request_store: filesystem
       pattern_ingester:
         enabled: false
+      # Log-based alerting: the ruler evaluates LogQL rules and fires to Alertmanager.
+      rulerConfig:
+        alertmanager_url: http://kube-prometheus-stack-alertmanager.monitoring.svc.cluster.local:9093
+        enable_alertmanager_v2: true
+        wal:
+          dir: /var/loki/ruler-wal
+        rule_path: /var/loki/rules-temp
+        storage:
+          type: local
+          local:
+            directory: /etc/loki/rules
     singleBinary:
       replicas: 1
       persistence:
@@ -69,6 +80,15 @@ spec:
           memory: 256Mi
         limits:
           memory: 512Mi
+      # Mount the LogQL alert rules into the ruler's tenant dir (auth disabled → "fake").
+      extraVolumes:
+        - name: loki-rules
+          configMap:
+            name: loki-alerting-rules
+      extraVolumeMounts:
+        - name: loki-rules
+          mountPath: /etc/loki/rules/fake
+          readOnly: true
     # Disable scalable-mode components (we run SingleBinary).
     read:
       replicas: 0
