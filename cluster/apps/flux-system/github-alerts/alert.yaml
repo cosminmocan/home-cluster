@@ -8,6 +8,24 @@ spec:
   providerRef:
     name: github-provider
   eventSeverity: info
+  # Scoped to home-cluster Kustomizations only. flux-install is deliberately OMITTED — its
+  # source is the upstream fluxcd/flux2 repo, so posting its SHA as a commit status on
+  # cosminmocan/home-cluster returns "422 No commit found". Flux Alerts match inclusively
+  # (no negation), so we enumerate. NOTE: add any new TOP-LEVEL Kustomization here to get its
+  # commit status; core-managed sub-Kustomizations are auto-covered by the label match below.
   eventSources:
     - kind: Kustomization
-      name: '*'
+      matchLabels:
+        kustomize.toolkit.fluxcd.io/name: core
+    - kind: Kustomization
+      name: flux-system
+    - kind: Kustomization
+      name: apps
+    - kind: Kustomization
+      name: core
+    - kind: Kustomization
+      name: charts
+    - kind: Kustomization
+      name: config
+    - kind: Kustomization
+      name: crds
