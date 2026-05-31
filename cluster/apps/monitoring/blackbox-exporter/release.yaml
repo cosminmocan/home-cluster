@@ -27,6 +27,18 @@ spec:
     keepHistory: false
   values:
     fullnameOverride: blackbox-exporter
+    # LAN-only ingress (no external-dns annotation → resolvable only internally, like Grafana).
+    ingress:
+      enabled: true
+      className: traefik
+      hosts:
+        - host: blackbox.${SECRET_DOMAIN}
+          paths:
+            - path: /
+              pathType: Prefix
+      tls:
+        - hosts:
+            - blackbox.${SECRET_DOMAIN}
     resources:
       requests:
         cpu: 10m
