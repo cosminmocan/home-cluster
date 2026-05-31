@@ -164,8 +164,8 @@ spec:
 
     prometheus:
       prometheusSpec:
-        retention: 7d
-        retentionSize: 4GB
+        retention: 14d
+        retentionSize: 8GB
         # Discover ServiceMonitors/PodMonitors/Probes created by subcharts and
         # standalone manifests, not just those labelled release=kube-prometheus-stack.
         serviceMonitorSelectorNilUsesHelmValues: false
