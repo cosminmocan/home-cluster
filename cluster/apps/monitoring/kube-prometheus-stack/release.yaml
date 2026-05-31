@@ -162,10 +162,18 @@ spec:
         limits:
           memory: 512Mi
 
+    # Cilium runs with kube-proxy replacement — there is no kube-proxy to scrape,
+    # so disable its (always-failing) scrape job + KubeProxyDown alert.
+    kubeProxy:
+      enabled: false
+
     prometheus:
       prometheusSpec:
         retention: 14d
         retentionSize: 8GB
+        # Enables the TSDB delete_series admin API (internal-only via the svc) so
+        # stale series can be purged, e.g. the old non-/ping radarr/prowlarr probes.
+        enableAdminAPI: true
         # Discover ServiceMonitors/PodMonitors/Probes created by subcharts and
         # standalone manifests, not just those labelled release=kube-prometheus-stack.
         serviceMonitorSelectorNilUsesHelmValues: false
