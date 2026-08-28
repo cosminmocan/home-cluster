@@ -1,0 +1,28 @@
+---
+# LAN-only ingress: no external-dns annotation, so the host is published solely by
+# k8s-gateway on the local network and never lands in the public Cloudflare zone.
+# Buffering is added alongside forward-auth because Stirling PDF is fed whole PDFs
+# over POST (same reason music/photos/drive use it).
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: stirling-pdf
+  namespace: media
+  annotations:
+    traefik.ingress.kubernetes.io/router.middlewares: "networking-authentik-forwardauth@kubernetescrd,networking-buffering-large-files@kubernetescrd"
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: &host "pdf.${SECRET_DOMAIN}"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: stirling-pdf
+                port:
+                  number: 8080
+  tls:
+    - hosts:
+        - *host
