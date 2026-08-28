@@ -1,0 +1,115 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: stirling-pdf
+  namespace: media
+spec:
+  interval: 15m
+  chart:
+    spec:
+      chart: stirling-pdf-chart
+      version: 3.1.0
+      sourceRef:
+        kind: HelmRepository
+        name: chart-stirling-tools
+        namespace: flux-system
+  maxHistory: 3
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  uninstall:
+    keepHistory: false
+  dependsOn:
+    - name: longhorn
+      namespace: longhorn-system
+  values:
+    # Without this the chart names everything "stirling-pdf-stirling-pdf-chart"
+    # (release name does not contain the chart name), which the Ingress backend
+    # in ingress.yaml would have to hardcode. Pin it instead.
+    fullnameOverride: stirling-pdf
+
+    image:
+      registry: docker.stirlingpdf.com
+      repository: stirlingtools/stirling-pdf
+      # The chart's appVersion is 2.5.1 (much older than the app), so the tag is
+      # pinned explicitly. Variants: "" (default, LibreOffice + OCR), "-ultra-lite"
+      # (no OCR/office conversion), "-fat" (adds all OCR languages + calibre).
+      # renovate: datasource=docker depName=docker.stirlingpdf.com/stirlingtools/stirling-pdf
+      tag: "2.14.3"
+
+    envs:
+      - name: TZ
+        value: ${TIMEZONE}
+      # Stirling's own login is off — the Ingress gates access with the shared
+      # Authentik forward-auth middleware instead. Disabling login also makes the
+      # app drop its X-Frame-Options: DENY header (upstream settings.yml.template).
+      - name: SECURITY_ENABLELOGIN
+        value: "false"
+      - name: SYSTEM_DEFAULTLOCALE
+        value: en-GB
+      # Defaults to null, which pops an "allow analytics?" prompt on first launch.
+      - name: SYSTEM_ENABLEANALYTICS
+        value: "false"
+      # Used for callbacks and the mobile-scanner QR codes; must be the URL a
+      # browser actually reaches, i.e. the Traefik host, not the Service.
+      - name: SYSTEM_BACKENDURL
+        value: https://pdf.${SECRET_DOMAIN}
+      - name: SYSTEM_FRONTENDURL
+        value: https://pdf.${SECRET_DOMAIN}
+
+    service:
+      type: ClusterIP
+      externalPort: 8080
+
+    # The chart's own Ingress template always emits a `tls:` key and needs a
+    # per-host tlsSecret; a standalone ingress.yaml is used instead so the
+    # cluster's wildcard cert and the Traefik middlewares apply as elsewhere.
+    ingress:
+      enabled: false
+
+    persistence:
+      enabled: true
+      storageClass: longhorn
+      accessMode: ReadWriteOnce
+      size: 2Gi
+      path: /configs
+    deployment:
+      # The chart declares the `storage-volume` volume but never mounts it into
+      # the container (templates/deployment.yaml only renders extraVolumeMounts),
+      # so /configs — settings.yml and the embedded H2 database — is mounted here
+      # by hand. /logs and /pipeline stay ephemeral on purpose.
+      extraVolumeMounts:
+        - name: storage-volume
+          mountPath: /configs
+
+    # Spring Boot needs well over the chart's default 5s grace period to boot.
+    probes:
+      liveness:
+        enabled: true
+        initialDelaySeconds: 90
+        periodSeconds: 15
+        timeoutSeconds: 5
+        successThreshold: 1
+        failureThreshold: 6
+      readiness:
+        enabled: true
+        initialDelaySeconds: 20
+        periodSeconds: 10
+        timeoutSeconds: 5
+        successThreshold: 1
+        failureThreshold: 30
+
+    # ctrl-00 is a single node already sitting around 72% memory, so the ceiling is
+    # deliberately modest. Raise it if large OCR / office conversions get OOM-killed.
+    resources:
+      requests:
+        cpu: 100m
+        memory: 768Mi
+      limits:
+        memory: 2Gi
