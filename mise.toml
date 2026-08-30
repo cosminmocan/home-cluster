@@ -2,7 +2,7 @@
 terraform = "1.15.0"
 kubectl = "1.33.9"
 flux2 = "2.8.8"
-talosctl = "1.13.2"
+talosctl = "1.13.9"
 
 [tasks."terraform:talos:init"]
 description = "Initialize Terraform for the Talos cluster workspace"
