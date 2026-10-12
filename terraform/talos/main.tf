@@ -28,9 +28,11 @@ module "talos" {
     gateway         = "192.168.100.1"
     proxmox_cluster = "home-cluster"
 
-    # Upgrade path — v1.11/1.30.0 → v1.12/1.31.0 ✓ → v1.13/1.32.0 ✓ → v1.13/1.33.0 ✓ → v1.13/1.34.0 ✓ → v1.13/1.35.0 ✓ → v1.13/1.36.0 ✓
+    # Upgrade path — v1.11/1.30.0 → v1.12/1.31.0 ✓ → v1.13/1.32.0 ✓ → v1.13/1.33.0 ✓ → v1.13/1.34.0 ✓ → v1.13/1.35.0 ✓ → v1.13/1.36.0 ✓ → v1.13/1.36.5 ✓
+    # 1.36.0–1.36.2 leak kubelet memory (~40 MB/day, kubernetes/kubernetes#139823); fixed in 1.36.3.
+    # Applied via `talosctl upgrade-k8s` (machine config apply has ignore_changes = all).
     talos_version      = "v1.13"
-    kubernetes_version = "1.36.0"
+    kubernetes_version = "1.36.5"
   }
 
   nodes = {
@@ -40,8 +42,7 @@ module "talos" {
       ip            = "192.168.100.10"
       vm_id         = 800
       cpu           = 4
-      ram_dedicated = 12288
+      ram_dedicated = 16384
     }
   }
 }
-
