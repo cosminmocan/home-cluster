@@ -26,7 +26,7 @@ data "talos_machine_configuration" "this" {
       cilium_values  = var.cilium.values
       cilium_install = var.cilium.install
     })
-  ] : [
+    ] : [
     templatefile("${path.module}/machine-config/worker.yaml.tftpl", {
       hostname     = each.key
       node_name    = each.value.host_node

@@ -40,8 +40,7 @@ module "talos" {
       ip            = "192.168.100.10"
       vm_id         = 800
       cpu           = 4
-      ram_dedicated = 12288
+      ram_dedicated = 16384
     }
   }
 }
-
