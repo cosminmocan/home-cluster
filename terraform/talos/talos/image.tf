@@ -1,6 +1,6 @@
 # terraform/talos/talos/image.tf
 locals {
-  version  = var.image.version
+  version   = var.image.version
   schematic = var.image.schematic
 
   schematic_id = jsondecode(data.http.schematic_id.response_body)["id"]
