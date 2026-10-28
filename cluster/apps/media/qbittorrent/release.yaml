@@ -42,12 +42,12 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/onedr0p/qbittorrent
-              tag: 5.0.4
+              repository: ghcr.io/home-operations/qbittorrent
+              tag: 5.3.0
             env:
               TZ: ${TIMEZONE}
-              QBITTORRENT__PORT: &port 8080
-              QBITTORRENT__BT_PORT: &port-bt 18289
+              QBT_WEBUI_PORT: &port 8080
+              QBT_TORRENTING_PORT: &port-bt 18289
             resources:
               requests:
                 cpu: 15m
