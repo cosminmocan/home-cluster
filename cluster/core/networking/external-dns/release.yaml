@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: external-dns
-      version: 1.21.1
+      version: 1.23.0
       sourceRef:
         kind: HelmRepository
         name: chart-external-dns
@@ -44,7 +44,12 @@ spec:
             key: CLOUDFLARE_APIKEY
     extraArgs:
       - --cloudflare-proxied
-      - --annotation-filter=external-dns.alpha.kubernetes.io/target
+      # v0.22+ only reads the external-dns.kubernetes.io/ prefix; this flag maps the
+      # legacy external-dns.alpha.kubernetes.io/ annotations on our ingresses to it
+      # *before* the annotation filter runs, so the filter must use the new prefix.
+      # Without both, policy=sync rewrites public CNAMEs to the LAN ingress IP.
+      - --enable-legacy-annotation-prefix
+      - --annotation-filter=external-dns.kubernetes.io/target
     policy: sync
     sources: ["ingress"]
     txtPrefix: k8s.
