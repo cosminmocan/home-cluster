@@ -9,10 +9,12 @@ spec:
   chart:
     spec:
       chart: loki
-      version: 6.55.0
+      # grafana/helm-charts' loki chart is GEL-only since 7.0; OSS chart lives in
+      # grafana-community (forked at 6.55.0).
+      version: 20.0.2
       sourceRef:
         kind: HelmRepository
-        name: chart-grafana
+        name: chart-grafana-community
         namespace: flux-system
   maxHistory: 3
   install:
@@ -30,9 +32,14 @@ spec:
       namespace: longhorn-system
   values:
     # Single-node homelab: one Loki process, filesystem storage on Longhorn.
-    deploymentMode: SingleBinary
+    deploymentMode: Monolithic # renamed from SingleBinary in chart 12.0
     loki:
       auth_enabled: false
+      # Chart 20 defaults this to true; with one pod and a headless memberlist
+      # service (no publishNotReadyAddresses) the startup self-join can fail.
+      structuredConfig:
+        memberlist:
+          abort_if_cluster_join_fails: false
       commonConfig:
         replication_factor: 1
       schemaConfig:
@@ -106,10 +113,6 @@ spec:
     test:
       enabled: false
     monitoring:
-      selfMonitoring:
-        enabled: false
-        grafanaAgent:
-          installOperator: false
       serviceMonitor:
         enabled: true
     # Top-level key (not under monitoring) — disables the canary DaemonSet.
