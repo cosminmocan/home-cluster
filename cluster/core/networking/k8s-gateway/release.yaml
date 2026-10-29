@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: k8s-gateway
-      version: 2.4.0
+      version: 3.7.2
       sourceRef:
         kind: HelmRepository
         name: chart-k8s-gateway
@@ -27,6 +27,9 @@ spec:
     keepHistory: false
   values:
     fullnameOverride: k8s-gateway
+    # Maintained fork (ori-edge/quay.io image is no longer pullable)
+    image:
+      tag: 1.8.2
     domain: "${SECRET_DOMAIN}"
     ttl: 30
     extraZonePlugins:
