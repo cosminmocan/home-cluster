@@ -58,8 +58,8 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/onedr0p/prowlarr-develop
-              tag: 1.32.2.4987
+              repository: ghcr.io/home-operations/prowlarr
+              tag: 2.7.0.5723
             env:
               TZ: ${TIMEZONE}
               PROWLARR__LOG_LEVEL: info
