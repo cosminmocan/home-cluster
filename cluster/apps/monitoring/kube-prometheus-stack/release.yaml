@@ -150,10 +150,6 @@ spec:
             gnetId: 16888
             revision: 9
             datasource: Prometheus
-          postgresql:
-            gnetId: 9628
-            revision: 7
-            datasource: Prometheus
           redis:
             gnetId: 11835
             revision: 1

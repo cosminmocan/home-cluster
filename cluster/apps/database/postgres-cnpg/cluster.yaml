@@ -1,8 +1,9 @@
 ---
 # Shared PostgreSQL managed by CloudNativePG (replaces the frozen bitnamilegacy
 # chart). Reachable at ${POSTGRES_HOST_ADDRESS} (the postgres-cnpg-rw Service).
-# Bootstrapped once by a logical import (pg_dump/pg_restore) from the old
-# Bitnami server; the import block is ignored after the cluster exists.
+# Data was migrated on 2026-10-29 by a one-off logical import from the old
+# Bitnami server (since removed). A fresh bootstrap (CNPG default initdb) starts empty — restore
+# from a pg_dumpall backup if the cluster ever has to be recreated.
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
@@ -23,26 +24,3 @@ spec:
       memory: 384Mi
     limits:
       memory: 768Mi
-  bootstrap:
-    initdb:
-      import:
-        type: monolith
-        databases:
-          - authentik
-          - paperless
-          - radarr-main
-          - radarr-log
-          - prowlarr-main
-          - prowlarr-log
-        source:
-          externalCluster: bitnami-postgresql
-  externalClusters:
-    - name: bitnami-postgresql
-      connectionParameters:
-        host: postgresql.database.svc.cluster.local
-        user: postgres
-        dbname: postgres
-        sslmode: disable
-      password:
-        name: postgres-cnpg-superuser
-        key: password
