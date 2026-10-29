@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: traefik
-      version: 39.0.9
+      version: 42.1.3
       sourceRef:
         kind: HelmRepository
         name: chart-traefik
@@ -20,6 +20,8 @@ spec:
     remediation:
       retries: 3
   upgrade:
+    # Chart CRDs change with Traefik minors (v3.7); Helm never upgrades crds/.
+    crds: CreateReplace
     cleanupOnFail: true
     remediation:
       retries: 3
@@ -127,13 +129,13 @@ spec:
       spec:
         externalTrafficPolicy: Local
 
-    logs:
-      general:
-        format: json
-        level: INFO
-      access:
-        enabled: true
-        format: json
+    # Chart 41+: logs.general → log, logs.access → accessLog.
+    log:
+      format: json
+      level: INFO
+    accessLog:
+      enabled: true
+      format: json
 
     resources:
       requests:
