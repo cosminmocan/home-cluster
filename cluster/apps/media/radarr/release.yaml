@@ -57,8 +57,8 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/onedr0p/radarr
-              tag: 5.20.1.9773
+              repository: ghcr.io/home-operations/radarr
+              tag: 6.4.4.10685
             env:
               TZ: ${TIMEZONE}
               RADARR__LOG_LEVEL: info
