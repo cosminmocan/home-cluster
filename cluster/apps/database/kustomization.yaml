@@ -5,6 +5,5 @@ resources:
   - namespace.yaml
   - postgres
   - pgadmin
-  - redis
   - valkey
   - authentik
