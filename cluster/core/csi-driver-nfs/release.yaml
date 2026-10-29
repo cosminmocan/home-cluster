@@ -36,5 +36,7 @@ spec:
         # $$ escapes Flux postBuild substitution; resolved by the CSI provisioner
         subDir: "$${pvc.metadata.namespace}-$${pvc.metadata.name}-$${pv.metadata.name}"
         onDelete: archive
+        # Match old provisioner: world-writable subdirs so non-root pods can write
+        mountPermissions: "0777"
       reclaimPolicy: Delete
       volumeBindingMode: Immediate
