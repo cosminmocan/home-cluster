@@ -40,7 +40,7 @@ spec:
           app:
             image:
               repository: alpine/curl
-              tag: "latest"
+              tag: "8.22.0"
             command: ["/bin/sh", "/app/cloudflare-ddns.sh"]
             env:
               CLOUDFLARE_EMAIL:
@@ -58,7 +58,7 @@ spec:
                   secretKeyRef:
                     name: cluster-secrets
                     key: CLOUDFLARE_DDNS_RECORD
-    
+
     persistence:
       config:
         type: configMap
