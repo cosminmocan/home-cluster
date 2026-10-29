@@ -60,16 +60,18 @@ spec:
               tag: 2.7.0.5723
             env:
               TZ: ${TIMEZONE}
-              PROWLARR__LOG_LEVEL: info
-              PROWLARR__BRANCH: develop
-              PROWLARR__APPLICATION_URL: "https://prowlarr.${SECRET_DOMAIN}"
+              PROWLARR__LOG__LEVEL: info
+              # Servarr env vars must be PROWLARR__<SECTION>__<KEY> (config.xml sections);
+              # single-underscore names are silently ignored. Update branch comes from the
+              # image's package_info, and ApplicationUrl is a UI/DB setting (set via API) —
+              # neither can be set here.
               PROWLARR__POSTGRES__HOST: "${POSTGRES_HOST_ADDRESS}"
               PROWLARR__POSTGRES__MAINDB: prowlarr-main
               PROWLARR__POSTGRES__LOGDB: prowlarr-log
               PROWLARR__POSTGRES__USER: "postgres"
               PROWLARR__POSTGRES__PASSWORD: "${SECRET_POSTGRES_ADMIN_PASS}"
-              PROWLARR__PORT: &port 9696
-              PROWLARR__API_KEY: "${PROWLARR_SECRET_KEY}"
+              PROWLARR__SERVER__PORT: &port 9696
+              PROWLARR__AUTH__APIKEY: "${PROWLARR_SECRET_KEY}"
             resources:
               requests:
                 cpu: 15m
