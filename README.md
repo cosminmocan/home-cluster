@@ -4,6 +4,10 @@ This repository manages my homelab infrastructure and Kubernetes cluster using a
 
 ## Hardware
 
+<p align="center">
+  <img src="transparent-nas-original.png" alt="Lenovo ThinkStation P330 Tiny stacked on a Synology DS923+" width="600">
+</p>
+
 | Device | Role |
 | --- | --- |
 | Lenovo P330 Tiny | Proxmox hypervisor host |
