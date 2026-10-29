@@ -35,12 +35,14 @@ spec:
   values:
     image:
       repository: ghcr.io/paperless-ngx/paperless-ngx
-      tag: 2.20.15
+      tag: 3.3.4
 
     env:
       TZ: ${TIMEZONE}
       PAPERLESS_URL: "https://docs.${SECRET_DOMAIN}"
       PAPERLESS_SECRET_KEY: "${SECRET_PAPERLESS_KEY}"
+      # v3 no longer infers the engine from DBHOST
+      PAPERLESS_DBENGINE: postgresql
       PAPERLESS_DBHOST: "${POSTGRES_HOST_ADDRESS}"
       PAPERLESS_DBPORT: "5432"
       PAPERLESS_DBNAME: paperless
