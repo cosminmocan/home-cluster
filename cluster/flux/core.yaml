@@ -14,6 +14,16 @@ spec:
   dependsOn:
     - name: charts
     - name: config
+    # ServiceMonitors/PodMonitors in core (Longhorn, CNPG, cert-manager, Traefik)
+    # need the prometheus-operator CRDs
+    - name: crds
+  # apps creates a CNPG Cluster — only report Ready once the operator (and its
+  # CRDs) is up, so apps is not applied against a missing CRD
+  healthChecks:
+    - apiVersion: helm.toolkit.fluxcd.io/v2
+      kind: HelmRelease
+      name: cloudnative-pg
+      namespace: cnpg-system
   decryption:
     provider: sops
     secretRef:

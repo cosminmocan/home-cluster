@@ -8,6 +8,8 @@ spec:
   interval: 10m
   path: ./cluster/crds
   prune: true
+  # Ready only once the CRDs are Established, so dependents can use them
+  wait: true
   sourceRef:
     kind: GitRepository
     name: flux-system

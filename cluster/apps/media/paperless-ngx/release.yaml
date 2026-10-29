@@ -26,12 +26,13 @@ spec:
   uninstall:
     keepHistory: false
   dependsOn:
-    - name: postgresql
-      namespace: database
     - name: valkey
       namespace: database
     - name: longhorn
       namespace: longhorn-system
+    # consume/media PVCs use the nfs-client StorageClass
+    - name: csi-driver-nfs
+      namespace: kube-system
   values:
     image:
       repository: ghcr.io/paperless-ngx/paperless-ngx

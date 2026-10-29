@@ -27,8 +27,6 @@ spec:
   uninstall:
     keepHistory: false
   dependsOn:
-    - name: postgresql
-      namespace: database
     - name: longhorn
       namespace: longhorn-system
   values:
@@ -65,11 +63,11 @@ spec:
               PROWLARR__LOG_LEVEL: info
               PROWLARR__BRANCH: develop
               PROWLARR__APPLICATION_URL: "https://prowlarr.${SECRET_DOMAIN}"
-              PROWLARR__POSTGRES_HOST: "${POSTGRES_HOST_ADDRESS}"
-              PROWLARR__POSTGRES_MAIN_DB: prowlarr-main
-              PROWLARR__POSTGRES_LOG_DB: prowlarr-log
-              PROWLARR__POSTGRES_USER: "postgres"
-              PROWLARR__POSTGRES_PASSWORD: "${SECRET_POSTGRES_ADMIN_PASS}"
+              PROWLARR__POSTGRES__HOST: "${POSTGRES_HOST_ADDRESS}"
+              PROWLARR__POSTGRES__MAINDB: prowlarr-main
+              PROWLARR__POSTGRES__LOGDB: prowlarr-log
+              PROWLARR__POSTGRES__USER: "postgres"
+              PROWLARR__POSTGRES__PASSWORD: "${SECRET_POSTGRES_ADMIN_PASS}"
               PROWLARR__PORT: &port 9696
               PROWLARR__API_KEY: "${PROWLARR_SECRET_KEY}"
             resources:
