@@ -105,7 +105,7 @@ spec:
           metrics:
             image:
               repository: ghcr.io/onedr0p/exportarr
-              tag: v2.2.0
+              tag: v2.3.0
             args: ["radarr"]
             env:
               PORT: &metrics-port 9707
