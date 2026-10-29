@@ -38,6 +38,16 @@ spec:
       extraArgs:
         prometheus-address: "http://kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090"
         storage: prometheus
+        # Defaults target a legacy Prometheus layout; map them to kube-prometheus-stack
+        # names. metric-for-pod-labels is sent as an instant query → needs a range.
+        prometheus-cadvisor-job-name: kubelet
+        container-pod-name-label: pod
+        container-name-label: container
+        container-namespace-label: namespace
+        pod-namespace-label: namespace
+        pod-name-label: pod
+        pod-label-prefix: label_
+        metric-for-pod-labels: 'kube_pod_labels{job="kube-state-metrics"}[8d]'
       resources:
         requests:
           cpu: 15m

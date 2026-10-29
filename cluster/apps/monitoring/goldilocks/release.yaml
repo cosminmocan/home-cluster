@@ -29,6 +29,16 @@ spec:
       namespace: monitoring
   values:
     controller:
+      rbac:
+        # Goldilocks walks pod ownerRefs to the top-level controller; these CRD
+        # owners (CNPG Cluster, Prometheus/Alertmanager CRs) need read access
+        extraRules:
+          - apiGroups: ["postgresql.cnpg.io"]
+            resources: ["clusters"]
+            verbs: ["get", "list", "watch"]
+          - apiGroups: ["monitoring.coreos.com"]
+            resources: ["prometheuses", "alertmanagers"]
+            verbs: ["get", "list", "watch"]
       resources:
         requests:
           cpu: 15m

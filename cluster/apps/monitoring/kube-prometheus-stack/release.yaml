@@ -225,6 +225,10 @@ spec:
           memory: 256Mi
 
     kube-state-metrics:
+      # Export pod labels as kube_pod_labels{label_*} — VPA uses them to match
+      # Prometheus history to its targets
+      metricLabelsAllowlist:
+        - pods=[*]
       resources:
         requests:
           cpu: 15m
