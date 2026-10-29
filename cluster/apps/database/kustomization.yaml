@@ -6,4 +6,5 @@ resources:
   - postgres
   - pgadmin
   - redis
+  - valkey
   - authentik

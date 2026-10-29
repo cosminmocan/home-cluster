@@ -1,0 +1,100 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
+# Valkey replaces the frozen bitnamilegacy Redis. Used only as Paperless's Celery
+# broker — no persistence, no auth (same as the old Redis), reachable at
+# ${REDIS_HOST_ADDRESS}.
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app valkey
+  namespace: database
+spec:
+  interval: 15m
+  chart:
+    spec:
+      chart: app-template
+      version: 4.6.2
+      sourceRef:
+        kind: HelmRepository
+        name: chart-bjw
+        namespace: flux-system
+  maxHistory: 2
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    controllers:
+      valkey:
+        pod:
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 999
+            runAsGroup: 1000
+            fsGroup: 1000
+            seccompProfile: { type: RuntimeDefault }
+        containers:
+          app:
+            image:
+              repository: docker.io/valkey/valkey
+              tag: 9.1.3-alpine
+            args: ["--save", "", "--appendonly", "no"]
+            securityContext: &sc
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 10m
+                memory: 32Mi
+              limits:
+                memory: 128Mi
+            probes:
+              liveness: &probe
+                enabled: true
+                custom: true
+                spec:
+                  exec: { command: ["valkey-cli", "ping"] }
+                  periodSeconds: 15
+                  failureThreshold: 3
+              readiness: *probe
+          metrics:
+            image:
+              repository: docker.io/oliver006/redis_exporter
+              tag: v1.96.0
+            env:
+              REDIS_ADDR: "redis://localhost:6379"
+            securityContext: *sc
+            resources:
+              requests:
+                cpu: 10m
+                memory: 32Mi
+              limits:
+                memory: 64Mi
+    service:
+      app:
+        controller: *app
+        ports:
+          redis:
+            port: 6379
+          metrics:
+            port: 9121
+    serviceMonitor:
+      app:
+        serviceName: *app
+        endpoints:
+          - port: metrics
+            scheme: http
+            path: /metrics
+            interval: 30s
+    persistence:
+      data:
+        type: emptyDir
+        globalMounts:
+          - path: /data
