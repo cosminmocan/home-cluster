@@ -18,9 +18,11 @@ spec:
   storage:
     size: 5Gi
     storageClass: longhorn
+  # Sized from observed usage (peak ~280Mi, p95 ~50m CPU) with headroom for
+  # vacuum / index builds / pg_dump; shared_buffers stays at the 128MB default.
   resources:
     requests:
-      cpu: 50m
+      cpu: 100m
       memory: 384Mi
     limits:
-      memory: 768Mi
+      memory: 1Gi
