@@ -10,7 +10,7 @@ metadata:
   namespace: database
 spec:
   instances: 1
-  imageName: ghcr.io/cloudnative-pg/postgresql:17.11-minimal-trixie
+  imageName: ghcr.io/cloudnative-pg/postgresql:17.11-standard-trixie
   enableSuperuserAccess: true
   superuserSecret:
     name: postgres-cnpg-superuser
