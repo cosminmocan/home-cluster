@@ -4,6 +4,7 @@ kind: Kustomization
 resources:
   - namespace.yaml
   - postgres
+  - postgres-cnpg
   - pgadmin
   - valkey
   - authentik
