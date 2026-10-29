@@ -31,10 +31,22 @@ spec:
   values:
     controller:
       type: daemonset
+      volumes:
+        extra:
+          # Node-local state dir so tail positions survive pod restarts
+          # (default /tmp/alloy is lost → every restart replays logs into Loki)
+          - name: alloy-data
+            hostPath:
+              path: /var/lib/alloy
+              type: DirectoryOrCreate
     alloy:
+      storagePath: /var/lib/alloy/data
       # Mount /var/log so we can tail pod logs from the node (no pods/log RBAC needed).
       mounts:
         varlog: true
+        extra:
+          - name: alloy-data
+            mountPath: /var/lib/alloy
       resources:
         requests:
           cpu: 25m
