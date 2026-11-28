@@ -43,7 +43,7 @@ spec:
           app:
             image:
               repository: docker.io/valkey/valkey
-              tag: 9.1.3-alpine
+              tag: 9.1.4-alpine
             # maxmemory below the container limit + noeviction: a flooded queue makes
             # writes fail loudly instead of OOM-killing the pod or silently dropping tasks
             args: ["--save", "", "--appendonly", "no", "--maxmemory", "192mb", "--maxmemory-policy", "noeviction"]
